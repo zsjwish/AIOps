@@ -11,13 +11,21 @@ import matplotlib.pyplot as plt
 
 def load_csv(file_name):
     """
-    使用numpy加载csv文件
-    csv文件的格式是： timestamp, 主机群和主机标识， KPI1, KPI2, KPI3, KPI4.....
+    使用numpy加载csv文件,并把除了host_id的都转换成float类型，因为孤立森林只能判别数值类型
+    csv文件的格式是： host_id(主机群和主机标识), timestamp, kpi_1, kpi_2, kpi_3, kpi_4.....
     :param file_name: 要解析的csv文件名
     :return:
     """
     array = np.loadtxt(file_name, dtype=str, delimiter=",", encoding='utf-8')
-    return array.T
+    print(type(array))
+    array = array.T
+    length = len(array)
+    array[1][1:] = [int(tmp) for tmp in array[1][1:]]
+    for i in range(2,length):
+        array[i][1:] = [float(tmp) for tmp in array[i][1:]]
+    print(array)
+    print(type(array[2][2]))
+    return array
 
 def show_csv(array, array_x, array_y):
     """
@@ -27,18 +35,15 @@ def show_csv(array, array_x, array_y):
     :param array_y:同上
     :return:
     """
-    #从第二个值开始取，因为第一个是label
-    x_value = array[array_x][1:]
-    y_value = array[array_y][1:]
+    #从第三个值开始取，因为第一个是host_id,第二个是时间戳
+    x_value = array[array_x][2:]
+    y_value = array[array_y][2:]
     #获取label标签，知道是那两行作图
     label_x = array[array_x][0]
     label_y = array[array_y][0]
     if "timestamp" in label_x:
         #一般来说x轴都是时间戳
         x_value = [timestamp_to_time(x) for x in x_value]
-    else:
-        x_value = [float(x) for x in x_value]
-    y_value = [float(t) for t in y_value]
     plt.plot(x_value, y_value, c='r', ls='--', marker='o', lw = 1.5, label=label_x)
     plt.xticks(range(0, len(x_value), 3), rotation=90)
     # plt.figure(dpi=128, figsize=(10, 6))

@@ -25,7 +25,15 @@ class Isolate():
 
         clf = IsolationForest(behaviour='new', max_samples=self.cases_size,
                               random_state=self.rng, contamination=self.rate)
-        pass
+        size = len(self.test_cases)
+        title = self.test_cases[:][0]
+        cases = self.test_cases[0][1:]
+        for i in range(size-1):
+            tmp = [float(case)for case in self.test_cases[i+1][1:]]
+            cases = np.c_(cases, tmp)
+        print(title)
+        print(cases)
+
 
     def judge_single(self,data):
         pass
