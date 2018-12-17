@@ -64,3 +64,21 @@ def simplify_timestamp(timestamps):
     :return:
     """
     return [timestamp_to_time(timestamp) for timestamp in timestamps]
+
+def get_uniform_cases(total, uniform_cases=256):
+    """
+    由于传入的测试集不可能刚好是256个，所以需要均匀取周期内的256个case作为测试集
+    :param total:int, 测试集总大小
+    :param uniform_cases:int, 要求均匀分为的份额，一般为256，用户可以自己设置
+    :return:
+    """
+    if total < 200:
+        print("测试集大小：", total)
+        return "测试集数据小于200，请重新传入大于200条数据的测试集"
+    elif total < 256:
+        print("测试集大小：", total)
+        return list(range(total))
+    res = np.linspace(0, total, uniform_cases)
+    res = [int(i) for i in res]
+    print("测试集大小：", len(res))
+    return res
