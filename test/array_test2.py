@@ -6,14 +6,12 @@
 # @Description:
 import numpy as np
 
-list = np.arange(0,20).reshape(2,10)
-print(list)
-list[1][3] = '123'
-print(list[1][3])
-print(type(list[1][3]))
-list3 = list[0]
-list2 = list[1].astype(np.string_)
-print(list2)
-l = np.r_[list3, list2]
-print(l)
-print(list2.dtype)
+arr = np.arange(12).reshape(3,4)
+a1 = arr.astype(str)
+print(a1)
+for i in range(3):
+    for j in range(4):
+        a1[i,j] = str(100+i+j)+'f'
+print(a1)
+
+print(str(2*3)+'d')

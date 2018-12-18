@@ -17,15 +17,7 @@ def load_csv(file_name):
     :return:
     """
     array = np.loadtxt(file_name, dtype=str, delimiter=",", encoding='utf-8')
-    print(type(array))
-    array = array.T
-    length = len(array)
-    array[1][1:] = [int(tmp) for tmp in array[1][1:]]
-    for i in range(2,length):
-        array[i][1:] = [float(tmp) for tmp in array[i][1:]]
-    print(array)
-    print(type(array[2][2]))
-    return array
+    return array.T
 
 def show_csv(array, array_x, array_y):
     """
