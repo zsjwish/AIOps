@@ -82,5 +82,6 @@ def get_uniform_cases(arrays, size=257):
     indexs = np.linspace(0, length-1, size)
     indexs = np.array(indexs, dtype=int)
     res_arr = arrays[indexs]
-    print("测试集大小：", len(indexs))
+    print("测试集大小：", len(indexs)-1)
     return res_arr
+

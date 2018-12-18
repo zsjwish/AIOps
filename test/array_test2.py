@@ -6,12 +6,10 @@
 # @Description:
 import numpy as np
 
-arr = np.arange(12).reshape(3,4)
-a1 = arr.astype(str)
-print(a1)
-for i in range(3):
-    for j in range(4):
-        a1[i,j] = str(100+i+j)+'f'
-print(a1)
+n1 = np.arange(20).reshape(5,4)
+n4 = n1[[1,3]]
+print(n4)
+n2 = np.arange(20,24).reshape(1,4)
+n3 = np.concatenate((n1, n2),axis=0)
+print(n3)
 
-print(str(2*3)+'d')

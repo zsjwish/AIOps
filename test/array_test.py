@@ -15,4 +15,5 @@ data1 = get_uniform_cases(data)
 print(data1)
 show_csv(data1, 1, 2)
 show_csv(data1, 1, 3)
+show_csv(data1, 1, 4)
 
