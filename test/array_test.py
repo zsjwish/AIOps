@@ -6,7 +6,7 @@
 # @Description:
 import csv
 
-from isolate_model.base_function import load_csv, show_csv
+from isolate_model.base_function import load_csv, show_csv, get_uniform_cases
 import pandas as pd
 import numpy as np
 # res = load_csv("../file/csv_test1.csv")
@@ -25,17 +25,9 @@ import numpy as np
 # print(x)
 
 
-data=csv.reader(open('../file/csv_test1.csv'))
-res = []
-for row in data:
-    res.append(row)
-print(res)
-print(type(res[2][2]))
-print(res[2][2])
-print(res[3])
-print("res:", res[1:][1:1])
-for i in res[1:][1]:
-    print(i)
-res[1:][1] = [int(i) for i in res[1:][1]]
-print(res)
-print(type(data))
+data=load_csv("../file/csv_total1.csv")
+data1 = get_uniform_cases(data)
+print(data1)
+show_csv(data1, 1, 2)
+show_csv(data1, 1, 3)
+
