@@ -79,9 +79,8 @@ def get_uniform_cases(arrays, size=257):
     elif length < 256:
         print("测试集大小：", length)
         return arrays
-    indexs = np.linspace(0, length, size)
-    indexs = [int(i) for i in indexs]
+    indexs = np.linspace(0, length-1, size)
+    indexs = np.array(indexs, dtype=int)
     res_arr = arrays[indexs]
-    print(res_arr)
     print("测试集大小：", len(indexs))
-    return indexs
+    return res_arr
