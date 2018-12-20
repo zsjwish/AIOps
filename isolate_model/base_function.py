@@ -68,6 +68,7 @@ def simplify_timestamp(timestamps):
 def get_uniform_cases(arrays, size=257):
     """
     由于传入的测试集不可能刚好是256个，所以需要均匀取周期内的256个case作为测试集
+    仅仅用于训练模型时使用
     :param arrays:测试集数组
     :param size:int, 要求均匀分为的份额，一般为256，用户可以自己设置,第一行为标签
     :return:
