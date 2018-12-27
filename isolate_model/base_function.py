@@ -4,6 +4,7 @@
 # @Author  : zsj
 # @File    : base_function.py
 # @Description: 用于提供孤立森林的各种边缘功能
+import re
 import time
 
 import numpy as np
@@ -35,12 +36,12 @@ def show_csv(array, array_x, array_y):
     label_y = array[0, array_y]
     if "timestamp" in label_x:
         #一般来说x轴都是时间戳
-        x_value = [timestamp_to_time(x) for x in x_value]
+        x_value = [format_time(x) for x in x_value]
     else:
         x_value = [float(x) for x in x_value]
     y_value = [float(y) for y in y_value]
     plt.plot(x_value, y_value, c='r', ls='--', marker='o', lw = 1.5, label=label_x)
-    plt.xticks(range(0, len(x_value), 3), rotation=90)
+    plt.xticks(range(0, len(x_value), int(len(x_value)/30)), rotation=90)
     # plt.figure(dpi=128, figsize=(10, 6))
     plt.xlabel(label_x)
     plt.ylabel(label_y)
@@ -85,4 +86,9 @@ def get_uniform_cases(arrays, size=257):
     res_arr = arrays[indexs]
     print("测试集大小：", len(indexs)-1)
     return res_arr
+
+def format_time(time):
+    # year, month, day, hour, minute, scend = re.split(r"/| |:", time)
+    # print(year, month, day, hour, minute, scend)
+    return time[0:-3]
 

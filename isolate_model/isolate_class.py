@@ -19,14 +19,14 @@ class Isolate():
         #模型的标志，每个模型名字独一无二
         self.name = name
         self.test_cases = test_cases
-        #数据集第一行，返回的时候对应返回
-        self.title = test_cases[0, 1:]
-        # print("title:", self.title)
         #数据集第一列，host_id
         self.host = test_cases[:, 0]
         # print("host_id:", self.host)
+        #数据集第一行，返回的时候对应返回
+        self.title = test_cases[0, 1:]
+        # print("title:", self.title)
         #数据集真实数据
-        self.cases = test_cases[1:, 1:].astype(np.float64)
+        self.cases = test_cases[1:, 2:].astype(np.float64)
         # print("cases:", self.cases)
         #定义测试集大小，默认为256
         self.cases_size = cases_size
@@ -52,7 +52,7 @@ class Isolate():
         datas：数据集合
         """
         #获取异常检测结果，存放在list中
-        multy_res = self.clf.predict(datas[1:, 1:].astype(np.float64))
+        multy_res = self.clf.predict(datas[1:, 2:].astype(np.float64))
         #如果list中没有-1，则返回True
         if sum(multy_res == -1) == 0:
             return True, None
@@ -64,7 +64,7 @@ class Isolate():
         res_cases = datas[1:, 1:]
         res_cases = res_cases[multy_res == -1]
         #整理title
-        res_title = datas[0, 1:].reshape(1,4)
+        res_title = datas[0, 1:].reshape(1,len(self.title))
         #拼接title和异常数据集
         res_tmp = np.concatenate((res_title, res_cases), axis=0)
         #拼接title，异常数据集，host_id
