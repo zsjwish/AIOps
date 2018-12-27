@@ -11,7 +11,7 @@ from isolate_model.isolate_class import Isolate
 cases = load_csv("../file/customs_test1.csv")
 
 # ##初始化模型
-isolate1 = Isolate('2_7',get_uniform_cases(cases))
-isolate1.judge_multy(cases[0:2, :])
+isolate1 = Isolate('2_7',cases)
+# isolate1.init_model()
 
 show_csv(cases, 1, 2)
