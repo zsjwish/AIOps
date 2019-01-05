@@ -92,3 +92,15 @@ def format_time(time):
     # print(year, month, day, hour, minute, scend)
     return time[0:-3]
 
+
+def draw_with_diff_color(np_array):
+    red_arr = []
+    green_arr = []
+    for arr in np_array:
+        if arr[-1] == '0':
+            red_arr.append(arr)
+        else:
+            green_arr.append(arr)
+    print(red_arr)
+    print(green_arr)
+
