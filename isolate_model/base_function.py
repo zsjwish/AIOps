@@ -4,9 +4,8 @@
 # @Author  : zsj
 # @File    : base_function.py
 # @Description: 用于提供孤立森林的各种边缘功能
-import re
-import time
 
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -17,8 +16,9 @@ def load_csv(file_name):
     :param file_name: 要解析的csv文件名
     :return:
     """
-    array = np.loadtxt(file_name, dtype=str, delimiter=",", encoding='utf-8')
+    array = np.loadtxt(file_name, dtype = str, delimiter = ",", encoding = 'utf-8')
     return array
+
 
 def show_csv(array, array_x, array_y):
     """
@@ -28,20 +28,20 @@ def show_csv(array, array_x, array_y):
     :param array_y:同上
     :return:
     """
-    #从第三个值开始取，因为第一个是host_id,第二个是时间戳
+    # 从第三个值开始取，因为第一个是host_id,第二个是时间戳
     x_value = array[1:, array_x]
     y_value = array[1:, array_y]
-    #获取label标签，知道是那两行作图
+    # 获取label标签，知道是那两行作图
     label_x = array[0, array_x]
     label_y = array[0, array_y]
     if "timestamp" in label_x:
-        #一般来说x轴都是时间戳
+        # 一般来说x轴都是时间戳
         x_value = [format_time(x) for x in x_value]
     else:
         x_value = [float(x) for x in x_value]
     y_value = [float(y) for y in y_value]
-    plt.plot(x_value, y_value, c='r', ls='--', marker='o', lw = 1.5, label=label_x)
-    plt.xticks(range(0, len(x_value), int(len(x_value)/30)), rotation=90)
+    plt.plot(x_value, y_value, c = 'r', ls = '--', marker = 'o', lw = 1.5, label = label_x)
+    plt.xticks(range(0, len(x_value), int(len(x_value) / 30)), rotation = 90)
     # plt.figure(dpi=128, figsize=(10, 6))
     plt.xlabel(label_x)
     plt.ylabel(label_y)
@@ -58,6 +58,7 @@ def timestamp_to_time(timestamp):
     time_local = time.localtime(timestamp)
     return time.strftime("%Y-%m-%d: %H:%M:%S", time_local)
 
+
 def simplify_timestamp(timestamps):
     """
     时间戳批量转换成时间
@@ -65,6 +66,7 @@ def simplify_timestamp(timestamps):
     :return:
     """
     return [timestamp_to_time(timestamp) for timestamp in timestamps]
+
 
 def get_uniform_cases(arrays, size=257):
     """
@@ -81,19 +83,30 @@ def get_uniform_cases(arrays, size=257):
     elif length < 256:
         print("测试集大小：", length)
         return arrays
-    indexs = np.linspace(0, length-1, size)
-    indexs = np.array(indexs, dtype=int)
+    indexs = np.linspace(0, length - 1, size)
+    indexs = np.array(indexs, dtype = int)
     res_arr = arrays[indexs]
-    print("测试集大小：", len(indexs)-1)
+    print("测试集大小：", len(indexs) - 1)
     return res_arr
 
+
 def format_time(time):
+    """
+    将传入的时间格式化，转换成没有秒的时间格式 yyyy-MM-DD hh-mm
+    :param time:
+    :return:
+    """
     # year, month, day, hour, minute, scend = re.split(r"/| |:", time)
     # print(year, month, day, hour, minute, scend)
     return time[0:-3]
 
 
 def draw_with_diff_color(np_array):
+    """
+    根据标签展示散点图，不同的标签具有不同颜色
+    :param np_array:
+    :return:
+    """
     red_arr = []
     green_arr = []
     for arr in np_array:
@@ -104,3 +117,18 @@ def draw_with_diff_color(np_array):
     print(red_arr)
     print(green_arr)
 
+def save_datas_with_labels(np_arrays):
+    """
+    存储已经由孤立森林学习过的带有标签的数据
+    :param np_arrays:
+    :return:
+    """
+    pass
+
+def translate_to_xgboost(np_arrays):
+    """
+    将孤立森林处理过的数据转换成xgboost能够识别的数据，时间格式上
+    :param np_arrays:
+    :return:
+    """
+    pass
