@@ -38,34 +38,43 @@ def query_table(db, table_name):
     return res == 1
 
 
-def createtable(db, np_array, table_name):
+def createtable(db, np_array_field, table_name):
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
 
-    length = len(np_array)
-    # 创建kpi和label的字段名
+    length = len(np_array_field)
+    # 创建kpi和label的字段名,kpi都是float类型，label是int类型，且从第三列开始，前两列为host_id,timestamp
     kpi_sql = ""
     for i in range(2, length - 1):
-        kpi_sql += "`%s` float," % (np_array[i])
-    kpi_sql += "`label` int" % np_array[-1]
+        kpi_sql += "`%s` float," % (np_array_field[i])
+    kpi_sql += "`label` int"
 
-    sql = "create table `%s`(host_id char(255) not null primary key, `time` timestamp," % (table_name) + kpi_sql + ");"
+    sql = "create table `%s`(`id` int auto_increment primary key, `time` timestamp not null," % (table_name) + kpi_sql + ");"
     print(sql)
 
     # 创建表
     cursor.execute(sql)
 
 
-def insertdb(db):
+def insertdb(db, np_array, table_name):
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
-
+    fileds = "time,"
+    for filed in np_array[0, 2:]:
+        fileds += filed + ","
+    fileds = fileds[:-1]
+    print(fileds)
+    datas_sql = ""
+    for data in np_array[1:]:
+        datas_sql += "('%s'," % (data[1])
+        for i in range(2, len(data) - 1):
+            datas_sql += "%f" % (float(data[i])) + ","
+        datas_sql += "%d" % (int(data[-1])) + "),"
+    datas_sql = datas_sql[:-1]
+    print(datas_sql)
     # SQL 插入语句
-    sql = """INSERT INTO Student VALUES ('001', 'CZQ', 70),('002', 'LHQ', 80),('003', 'MQ', 90),('004', 'WH', 80),
-                ('005', 'HP', 70),
-                ('006', 'YF', 66),
-                ('007', 'TEST', 100)"""
-
+    sql = """INSERT INTO `%s`(%s) VALUES %s""" % (table_name, fileds, datas_sql)
+    print(sql)
     # sql = "INSERT INTO Student(ID, Name, Grade) \
     #    VALUES ('%s', '%s', '%d')" % \
     #    ('001', 'HP', 60)
@@ -145,15 +154,16 @@ def closedb(db):
 
 
 def main():
-    cases = load_csv("../file/customs_test3.csv")
+    cases = load_csv("../file/customs_test2.csv")
     isolate1 = Isolate('2_7', cases)
     # isolate1.init_model()
     arr = isolate1.merge_arrays()
     db = connectdb()  # 连接MySQL数据库
     print(query_table(db, "student1"))
     print(query_table(db, "student"))
-    createtable(db, arr[0], arr[1, 0])  # 创建表
-    # insertdb(db)        # 插入数据
+    table_name = arr[1, 0]
+    # createtable(db, arr[0], table_name)  # 创建表
+    insertdb(db, arr, table_name)  # 插入数据
     # print('\n插入数据后:')
     # querydb(db)
     # deletedb(db)        # 删除数据
