@@ -12,10 +12,14 @@ from isolate_model.isolate_class import Isolate
 
 
 def connectdb():
-    # 打开数据库连接
+    """
+    打开数据库连接
+    :return:
+    """
     db = pymysql.connect("localhost", "root", "123", "aiops")
     print('已连接数据库')
     return db
+
 
 def query_table(db, table_name):
     """
@@ -33,37 +37,36 @@ def query_table(db, table_name):
     res = cursor.execute(sql)
     return res == 1
 
+
 def createtable(db, np_array, table_name):
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
 
     length = len(np_array)
+    # 创建kpi和label的字段名
     kpi_sql = ""
-    for i in range(2, length-1):
+    for i in range(2, length - 1):
         kpi_sql += "`%s` float," % (np_array[i])
-    kpi_sql += "`%s` int" % np_array[-1]
+    kpi_sql += "`label` int" % np_array[-1]
 
     sql = "create table `%s`(host_id char(255) not null primary key, `time` timestamp," % (table_name) + kpi_sql + ");"
     print(sql)
 
-    # 创建Sutdent表
+    # 创建表
     cursor.execute(sql)
+
 
 def insertdb(db):
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
 
     # SQL 插入语句
-    sql = """INSERT INTO Student
-         VALUES ('001', 'CZQ', 70),
-                ('002', 'LHQ', 80),
-                ('003', 'MQ', 90),
-                ('004', 'WH', 80),
+    sql = """INSERT INTO Student VALUES ('001', 'CZQ', 70),('002', 'LHQ', 80),('003', 'MQ', 90),('004', 'WH', 80),
                 ('005', 'HP', 70),
                 ('006', 'YF', 66),
                 ('007', 'TEST', 100)"""
 
-    #sql = "INSERT INTO Student(ID, Name, Grade) \
+    # sql = "INSERT INTO Student(ID, Name, Grade) \
     #    VALUES ('%s', '%s', '%d')" % \
     #    ('001', 'HP', 60)
     try:
@@ -76,12 +79,13 @@ def insertdb(db):
         print('插入数据失败!')
         db.rollback()
 
+
 def querydb(db):
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
 
     # SQL 查询语句
-    #sql = "SELECT * FROM Student \
+    # sql = "SELECT * FROM Student \
     #    WHERE Grade > '%d'" % (80)
     sql = "SELECT * FROM Student"
     try:
@@ -95,9 +99,10 @@ def querydb(db):
             Grade = row[2]
             # 打印结果
             print("ID: %s, Name: %s, Grade: %d" % \
-                (ID, Name, Grade))
+                  (ID, Name, Grade))
     except:
         print("Error: unable to fecth data")
+
 
 def deletedb(db):
     # 使用cursor()方法获取操作游标
@@ -107,14 +112,15 @@ def deletedb(db):
     sql = "DELETE FROM Student WHERE Grade = '%d'" % (100)
 
     try:
-       # 执行SQL语句
-       cursor.execute(sql)
-       # 提交修改
-       db.commit()
+        # 执行SQL语句
+        cursor.execute(sql)
+        # 提交修改
+        db.commit()
     except:
         print('删除数据失败!')
         # 发生错误时回滚
         db.rollback()
+
 
 def updatedb(db):
     # 使用cursor()方法获取操作游标
@@ -133,20 +139,20 @@ def updatedb(db):
         # 发生错误时回滚
         db.rollback()
 
+
 def closedb(db):
     db.close()
 
+
 def main():
     cases = load_csv("../file/customs_test3.csv")
-
-    # ##初始化模型
     isolate1 = Isolate('2_7', cases)
     # isolate1.init_model()
     arr = isolate1.merge_arrays()
-    db = connectdb()    # 连接MySQL数据库
+    db = connectdb()  # 连接MySQL数据库
     print(query_table(db, "student1"))
     print(query_table(db, "student"))
-    createtable(db, arr[0], arr[1, 0])     # 创建表
+    createtable(db, arr[0], arr[1, 0])  # 创建表
     # insertdb(db)        # 插入数据
     # print('\n插入数据后:')
     # querydb(db)
@@ -157,7 +163,8 @@ def main():
     # print('\n更新数据后:')
     # querydb(db)
 
-    closedb(db)         # 关闭数据库
+    closedb(db)  # 关闭数据库
+
 
 if __name__ == '__main__':
     main()
