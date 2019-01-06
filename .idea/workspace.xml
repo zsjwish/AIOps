@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="640412a6-3638-4df7-bc56-082e592ce08a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db/mysql_operation.py" beforeDir="false" afterPath="$PROJECT_DIR$/db/mysql_operation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/file/customs_test2.csv" beforeDir="false" afterPath="$PROJECT_DIR$/file/customs_test2.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/file/customs_test3.csv" beforeDir="false" afterPath="$PROJECT_DIR$/file/customs_test3.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/db_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/db_test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -40,13 +36,18 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/db/mysql_operation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="71" column="49" lean-forward="true" selection-start-line="71" selection-start-column="49" selection-end-line="71" selection-end-column="49" />
+            <state relative-caret-position="335">
+              <caret line="141" column="27" lean-forward="true" selection-start-line="141" selection-start-column="27" selection-end-line="141" selection-end-column="27" />
               <folding>
                 <element signature="e#166#180#0" expanded="true" />
+                <element signature="e#302#434#0" />
+                <element signature="e#474#927#0" />
+                <element signature="e#988#1504#0" />
+                <element signature="e#1504#2403#0" />
+                <element signature="e#3182#3470#0" />
               </folding>
             </state>
           </provider>
@@ -95,7 +96,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/file/customs_test2.csv">
           <provider selected="true" editor-type-id="csv-text-editor">
             <state relative-caret-position="-53986">
@@ -198,7 +199,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="width" value="1920" />
     <option name="height" value="1030" />
   </component>
@@ -425,12 +426,12 @@
       <workItem from="1546674526376" duration="2672000" />
       <workItem from="1546679390876" duration="7951000" />
       <workItem from="1546749951019" duration="2032000" />
-      <workItem from="1546754903405" duration="3678000" />
+      <workItem from="1546754903405" duration="11303000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="118051000" />
+    <option name="totallyTimeSpent" value="125676000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -442,14 +443,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="2062" height="1126" extended-state="7" />
+    <frame x="-7" y="-7" width="2062" height="1126" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16117765" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.45184135" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.36217305" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.31287727" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.46981892" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -457,7 +459,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.3286119" />
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.4362606" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.28186968" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.28169015" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -483,21 +485,6 @@
           <url>file://$PROJECT_DIR$/xgboost/xgboost_test.py</url>
           <line>23</line>
           <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/db/mysql_operation.py</url>
-          <line>42</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/db/mysql_operation.py</url>
-          <line>68</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/db/mysql_operation.py</url>
-          <line>64</line>
-          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -802,16 +789,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/db/mysql_operation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="71" column="49" lean-forward="true" selection-start-line="71" selection-start-column="49" selection-end-line="71" selection-end-column="49" />
-          <folding>
-            <element signature="e#166#180#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/file/customs_test3.csv">
       <provider editor-type-id="csv-table-editor">
         <state showInfoPanel="true" rowLines="3" />
@@ -834,6 +811,21 @@
       <provider selected="true" editor-type-id="csv-text-editor">
         <state relative-caret-position="-53986">
           <caret line="555" column="59" lean-forward="true" selection-start-line="555" selection-start-column="59" selection-end-line="555" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db/mysql_operation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="335">
+          <caret line="141" column="27" lean-forward="true" selection-start-line="141" selection-start-column="27" selection-end-line="141" selection-end-column="27" />
+          <folding>
+            <element signature="e#166#180#0" expanded="true" />
+            <element signature="e#302#434#0" />
+            <element signature="e#474#927#0" />
+            <element signature="e#988#1504#0" />
+            <element signature="e#1504#2403#0" />
+            <element signature="e#3182#3470#0" />
+          </folding>
         </state>
       </provider>
     </entry>

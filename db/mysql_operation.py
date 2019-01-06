@@ -39,6 +39,13 @@ def query_table(db, table_name):
 
 
 def createtable(db, np_array_field, table_name):
+    """
+    创建数据库表，
+    :param db:
+    :param np_array_field: 表字段名
+    :param table_name: 表名
+    :return:
+    """
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
 
@@ -49,21 +56,34 @@ def createtable(db, np_array_field, table_name):
         kpi_sql += "`%s` float," % (np_array_field[i])
     kpi_sql += "`label` int"
 
-    sql = "create table `%s`(`id` int auto_increment primary key, `time` timestamp not null," % (table_name) + kpi_sql + ");"
+    # 创建表sql语句，加入一个id自增，因为一分钟内可能有多条数据
+    sql = "create table `%s`(`id` int auto_increment primary key, `time` timestamp not null," % (
+        table_name) + kpi_sql + ");"
     print(sql)
 
     # 创建表
     cursor.execute(sql)
 
 
-def insertdb(db, np_array, table_name):
+def insertdb(db, np_array):
+    """
+    训练时批量插入数据到表中
+    :param db:
+    :param np_array: 整个数据集，包括第一行字段名和后面的数据行
+    :param table_name: 表名
+    :return:
+    """
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
+    table_name = np_array[1, 0]
+
+    # 插入的字段名，因为有一个主键是自增的
     fileds = "time,"
     for filed in np_array[0, 2:]:
         fileds += filed + ","
     fileds = fileds[:-1]
-    print(fileds)
+
+    # 待插入的数据，格式为(time,kpi_1...kpi_n, label),(time,kpi_1...kpi_n, label)...(time,kpi_1...kpi_n, label)
     datas_sql = ""
     for data in np_array[1:]:
         datas_sql += "('%s'," % (data[1])
@@ -72,53 +92,80 @@ def insertdb(db, np_array, table_name):
         datas_sql += "%d" % (int(data[-1])) + "),"
     datas_sql = datas_sql[:-1]
     print(datas_sql)
-    # SQL 插入语句
-    sql = """INSERT INTO `%s`(%s) VALUES %s""" % (table_name, fileds, datas_sql)
+
+    # sql 插入语句,确定表名，字段名（有自增字段）,和插入内容
+    sql = "INSERT INTO `%s`(%s) VALUES %s " % (table_name, fileds, datas_sql)
     print(sql)
-    # sql = "INSERT INTO Student(ID, Name, Grade) \
-    #    VALUES ('%s', '%s', '%d')" % \
-    #    ('001', 'HP', 60)
+
     try:
         # 执行sql语句
         cursor.execute(sql)
         # 提交到数据库执行
         db.commit()
     except:
-        # Rollback in case there is any error
+        # 如果失败则回滚
         print('插入数据失败!')
         db.rollback()
 
 
-def querydb(db):
+def querydb(db, table_name, label=(0, 1), start_time=0, end_time=0):
+    """
+    按条件查询数据库
+    :param db:
+    :param table_name:表名
+    :param label: 标签
+    :param start_time:
+    :param end_time:
+    :return:
+    """
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
+    condition = ""
+    if start_time != 0 and end_time != 0:
+        condition = "and `time` between '%s' and '%s'" % (start_time, end_time)
+    elif start_time == 0:
+        condition = "and `time` >= '%s'" % start_time
+    elif end_time == 0:
+        condition = "and `time` <= '%s'" % end_time
+    if label == 0 or label == 1:
+        condition += "and label = '%d'" % label
+
+    print(condition)
 
     # SQL 查询语句
     # sql = "SELECT * FROM Student \
     #    WHERE Grade > '%d'" % (80)
-    sql = "SELECT * FROM Student"
+    sql = "SELECT * FROM `%s` where 1=1 %s " %(table_name, condition)
+    print(sql)
     try:
         # 执行SQL语句
         cursor.execute(sql)
         # 获取所有记录列表
         results = cursor.fetchall()
-        for row in results:
-            ID = row[0]
-            Name = row[1]
-            Grade = row[2]
-            # 打印结果
-            print("ID: %s, Name: %s, Grade: %d" % \
-                  (ID, Name, Grade))
+        print(results)
+        # for row in results:
+        #     ID = row[0]
+        #     Name = row[1]
+        #     Grade = row[2]
+        #     # 打印结果
+        #     print("ID: %s, Name: %s, Grade: %d" % \
+        #           (ID, Name, Grade))
     except:
         print("Error: unable to fecth data")
 
 
-def deletedb(db):
+def drop_table(db, table_name):
+    """
+    删除某表
+    :param db:
+    :param table_name:要删除的表名
+    :return:
+    """
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
 
     # SQL 删除语句
-    sql = "DELETE FROM Student WHERE Grade = '%d'" % (100)
+    sql = "drop table `%s`" % (table_name)
 
     try:
         # 执行SQL语句
@@ -126,18 +173,56 @@ def deletedb(db):
         # 提交修改
         db.commit()
     except:
+        print('删除数据库表失败!')
+        # 发生错误时回滚
+        db.rollback()
+
+
+def delete_datas(db, table_name, start_time=0, end_time=0):
+    """
+    按时间区间删除数据
+    :param db: 数据库
+    :param table_name: 表名
+    :param start_time: 开始时间
+    :param end_time: 结束时间
+    :return:
+    """
+    cursor = db.cursor()
+    condition = ""
+    if start_time != 0 and end_time != 0:
+        condition = "and `time` between '%s' and '%s'" % (start_time, end_time)
+    elif start_time == 0:
+        condition = "and `time` >= '%s'" % start_time
+    elif end_time == 0:
+        condition = "and `time` <= '%s'" % end_time
+
+    sql = "delete from `%s` where 1=1  %s" % (table_name, condition)
+    try:
+        # 执行SQL语句
+        cursor.execute(sql)
+        # 提交到数据库执行
+        db.commit()
+    except:
         print('删除数据失败!')
         # 发生错误时回滚
         db.rollback()
 
 
-def updatedb(db):
+def updatedb(db, table_name, start_time, end_time, label):
+    """
+    更新数据库表数据label
+    :param db:
+    :param table_name: 表名
+    :param start_time: 开始时间
+    :param end_time: 截止时间
+    :param label: 要更改成的label
+    :return:
+    """
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
 
     # SQL 更新语句
-    sql = "UPDATE Student SET Grade = Grade + 3 WHERE ID = '%s'" % ('003')
-
+    sql = "UPDATE `%s` SET label = '%s' where time between '%s' and '%s'" % (table_name, label, start_time, end_time)
     try:
         # 执行SQL语句
         cursor.execute(sql)
@@ -148,8 +233,12 @@ def updatedb(db):
         # 发生错误时回滚
         db.rollback()
 
-
 def closedb(db):
+    """
+    关闭数据库连接
+    :param db:
+    :return:
+    """
     db.close()
 
 
