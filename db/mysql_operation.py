@@ -38,7 +38,7 @@ def query_table(db, table_name):
     return res == 1
 
 
-def createtable(db, np_array_field, table_name):
+def create_table(db, np_array_field, table_name):
     """
     创建数据库表，
     :param db:
@@ -65,12 +65,11 @@ def createtable(db, np_array_field, table_name):
     cursor.execute(sql)
 
 
-def insertdb(db, np_array):
+def insert_datas(db, np_array):
     """
     训练时批量插入数据到表中
     :param db:
     :param np_array: 整个数据集，包括第一行字段名和后面的数据行
-    :param table_name: 表名
     :return:
     """
     # 使用cursor()方法获取操作游标
@@ -91,10 +90,9 @@ def insertdb(db, np_array):
             datas_sql += "%f" % (float(data[i])) + ","
         datas_sql += "%d" % (int(data[-1])) + "),"
     datas_sql = datas_sql[:-1]
-    print(datas_sql)
 
     # sql 插入语句,确定表名，字段名（有自增字段）,和插入内容
-    sql = "INSERT INTO `%s`(%s) VALUES %s " % (table_name, fileds, datas_sql)
+    sql = "INSERT INTO `%s`(%s) VALUES %s" % (table_name, fileds, datas_sql)
     print(sql)
 
     try:
@@ -108,7 +106,7 @@ def insertdb(db, np_array):
         db.rollback()
 
 
-def querydb(db, table_name, label=(0, 1), start_time=0, end_time=0):
+def query_datas(db, table_name, label=(0, 1), start_time=0, end_time=0):
     """
     按条件查询数据库
     :param db:
@@ -123,35 +121,61 @@ def querydb(db, table_name, label=(0, 1), start_time=0, end_time=0):
     condition = ""
     if start_time != 0 and end_time != 0:
         condition = "and `time` between '%s' and '%s'" % (start_time, end_time)
-    elif start_time == 0:
+    elif start_time != 0:
         condition = "and `time` >= '%s'" % start_time
-    elif end_time == 0:
+    elif end_time != 0:
         condition = "and `time` <= '%s'" % end_time
     if label == 0 or label == 1:
-        condition += "and label = '%d'" % label
-
-    print(condition)
+        condition += "and label = %d" % label
 
     # SQL 查询语句
     # sql = "SELECT * FROM Student \
     #    WHERE Grade > '%d'" % (80)
-    sql = "SELECT * FROM `%s` where 1=1 %s " %(table_name, condition)
+    sql = "SELECT * FROM `%s` where 1=1 %s" % (table_name, condition)
     print(sql)
     try:
         # 执行SQL语句
         cursor.execute(sql)
         # 获取所有记录列表
         results = cursor.fetchall()
-        print(results)
-        # for row in results:
-        #     ID = row[0]
-        #     Name = row[1]
-        #     Grade = row[2]
-        #     # 打印结果
-        #     print("ID: %s, Name: %s, Grade: %d" % \
-        #           (ID, Name, Grade))
+        return results
     except:
         print("Error: unable to fecth data")
+        return None
+
+
+def update_datas(db, table_name, label, start_time=0, end_time=0):
+    """
+    更新数据库表数据label
+    :param db:
+    :param table_name: 表名
+    :param start_time: 开始时间
+    :param end_time: 截止时间
+    :param label: 要更改成的label
+    :return:
+    """
+    # 使用cursor()方法获取操作游标
+    cursor = db.cursor()
+    condition = ""
+    if start_time != 0 and end_time != 0:
+        condition = "and `time` between '%s' and '%s'" % (start_time, end_time)
+    elif start_time != 0:
+        condition = "and `time` >= '%s'" % start_time
+    elif end_time != 0:
+        condition = "and `time` <= '%s'" % end_time
+
+    # SQL 更新语句
+    sql = "UPDATE `%s` SET label = %d where 1 = 1  %s" % (table_name, label, condition)
+    print(sql)
+    try:
+        # 执行SQL语句
+        cursor.execute(sql)
+        # 提交到数据库执行
+        db.commit()
+    except:
+        print('更新数据失败!')
+        # 发生错误时回滚
+        db.rollback()
 
 
 def drop_table(db, table_name):
@@ -166,7 +190,7 @@ def drop_table(db, table_name):
 
     # SQL 删除语句
     sql = "drop table `%s`" % (table_name)
-
+    print(sql)
     try:
         # 执行SQL语句
         cursor.execute(sql)
@@ -191,12 +215,13 @@ def delete_datas(db, table_name, start_time=0, end_time=0):
     condition = ""
     if start_time != 0 and end_time != 0:
         condition = "and `time` between '%s' and '%s'" % (start_time, end_time)
-    elif start_time == 0:
+    elif start_time != 0:
         condition = "and `time` >= '%s'" % start_time
-    elif end_time == 0:
+    elif end_time != 0:
         condition = "and `time` <= '%s'" % end_time
 
     sql = "delete from `%s` where 1=1  %s" % (table_name, condition)
+    print(sql)
     try:
         # 执行SQL语句
         cursor.execute(sql)
@@ -207,31 +232,6 @@ def delete_datas(db, table_name, start_time=0, end_time=0):
         # 发生错误时回滚
         db.rollback()
 
-
-def updatedb(db, table_name, start_time, end_time, label):
-    """
-    更新数据库表数据label
-    :param db:
-    :param table_name: 表名
-    :param start_time: 开始时间
-    :param end_time: 截止时间
-    :param label: 要更改成的label
-    :return:
-    """
-    # 使用cursor()方法获取操作游标
-    cursor = db.cursor()
-
-    # SQL 更新语句
-    sql = "UPDATE `%s` SET label = '%s' where time between '%s' and '%s'" % (table_name, label, start_time, end_time)
-    try:
-        # 执行SQL语句
-        cursor.execute(sql)
-        # 提交到数据库执行
-        db.commit()
-    except:
-        print('更新数据失败!')
-        # 发生错误时回滚
-        db.rollback()
 
 def closedb(db):
     """
@@ -252,7 +252,10 @@ def main():
     print(query_table(db, "student"))
     table_name = arr[1, 0]
     # createtable(db, arr[0], table_name)  # 创建表
-    insertdb(db, arr, table_name)  # 插入数据
+    insert_datas(db, arr)  # 插入数据
+    query_datas(db, table_name)
+    delete_datas(db, table_name)
+    query_datas(db, table_name)
     # print('\n插入数据后:')
     # querydb(db)
     # deletedb(db)        # 删除数据
