@@ -7,9 +7,6 @@
 
 import pymysql
 
-from isolate_model.base_function import load_csv
-from isolate_model.isolate_class import Isolate
-
 
 def connectdb():
     """
@@ -44,7 +41,7 @@ def create_table(db, np_array_field, table_name):
     :param db:
     :param np_array_field: 表字段名
     :param table_name: 表名
-    :return:
+    :return: True或者False，代表是否创建成功
     """
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
@@ -60,9 +57,17 @@ def create_table(db, np_array_field, table_name):
     sql = "create table `%s`(`id` int auto_increment primary key, `time` timestamp not null," % (
         table_name) + kpi_sql + ");"
     print(sql)
-
-    # 创建表
-    cursor.execute(sql)
+    try:
+        # 执行sql语句
+        cursor.execute(sql)
+        # 提交到数据库执行
+        db.commit()
+        return True
+    except:
+        # 如果失败则回滚
+        print('创建数据表失败!')
+        db.rollback()
+        return False
 
 
 def insert_datas(db, np_array):
@@ -70,7 +75,7 @@ def insert_datas(db, np_array):
     训练时批量插入数据到表中
     :param db:
     :param np_array: 整个数据集，包括第一行字段名和后面的数据行
-    :return:
+    :return:True 或者 False代表插入成功与否
     """
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
@@ -100,10 +105,12 @@ def insert_datas(db, np_array):
         cursor.execute(sql)
         # 提交到数据库执行
         db.commit()
+        return True
     except:
         # 如果失败则回滚
         print('插入数据失败!')
         db.rollback()
+        return False
 
 
 def query_datas(db, table_name, label=(0, 1), start_time=0, end_time=0):
@@ -112,9 +119,9 @@ def query_datas(db, table_name, label=(0, 1), start_time=0, end_time=0):
     :param db:
     :param table_name:表名
     :param label: 标签
-    :param start_time:
-    :param end_time:
-    :return:
+    :param start_time: 开始时间
+    :param end_time: 结束时间  时间区间限制
+    :return: 返回查询到的数据或者None
     """
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
@@ -129,8 +136,6 @@ def query_datas(db, table_name, label=(0, 1), start_time=0, end_time=0):
         condition += "and label = %d" % label
 
     # SQL 查询语句
-    # sql = "SELECT * FROM Student \
-    #    WHERE Grade > '%d'" % (80)
     sql = "SELECT * FROM `%s` where 1=1 %s" % (table_name, condition)
     print(sql)
     try:
@@ -152,7 +157,7 @@ def update_datas(db, table_name, label, start_time=0, end_time=0):
     :param start_time: 开始时间
     :param end_time: 截止时间
     :param label: 要更改成的label
-    :return:
+    :return: True 或者 False代表数据更新成功与否
     """
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
@@ -172,10 +177,12 @@ def update_datas(db, table_name, label, start_time=0, end_time=0):
         cursor.execute(sql)
         # 提交到数据库执行
         db.commit()
+        return True
     except:
         print('更新数据失败!')
         # 发生错误时回滚
         db.rollback()
+        return False
 
 
 def drop_table(db, table_name):
@@ -183,7 +190,7 @@ def drop_table(db, table_name):
     删除某表
     :param db:
     :param table_name:要删除的表名
-    :return:
+    :return: True 或者 False代表删除表格成功与否
     """
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
@@ -196,10 +203,12 @@ def drop_table(db, table_name):
         cursor.execute(sql)
         # 提交修改
         db.commit()
+        return True
     except:
         print('删除数据库表失败!')
         # 发生错误时回滚
         db.rollback()
+        return False
 
 
 def delete_datas(db, table_name, start_time=0, end_time=0):
@@ -209,7 +218,7 @@ def delete_datas(db, table_name, start_time=0, end_time=0):
     :param table_name: 表名
     :param start_time: 开始时间
     :param end_time: 结束时间
-    :return:
+    :return:True 或者 False代表删除数据成功与否
     """
     cursor = db.cursor()
     condition = ""
@@ -227,10 +236,12 @@ def delete_datas(db, table_name, start_time=0, end_time=0):
         cursor.execute(sql)
         # 提交到数据库执行
         db.commit()
+        return True
     except:
         print('删除数据失败!')
         # 发生错误时回滚
         db.rollback()
+        return False
 
 
 def closedb(db):
@@ -240,33 +251,3 @@ def closedb(db):
     :return:
     """
     db.close()
-
-
-def main():
-    cases = load_csv("../file/customs_test2.csv")
-    isolate1 = Isolate('2_7', cases)
-    # isolate1.init_model()
-    arr = isolate1.merge_arrays()
-    db = connectdb()  # 连接MySQL数据库
-    print(query_table(db, "student1"))
-    print(query_table(db, "student"))
-    table_name = arr[1, 0]
-    # createtable(db, arr[0], table_name)  # 创建表
-    insert_datas(db, arr)  # 插入数据
-    query_datas(db, table_name)
-    delete_datas(db, table_name)
-    query_datas(db, table_name)
-    # print('\n插入数据后:')
-    # querydb(db)
-    # deletedb(db)        # 删除数据
-    # print('\n删除数据后:')
-    # querydb(db)
-    # updatedb(db)        # 更新数据
-    # print('\n更新数据后:')
-    # querydb(db)
-
-    closedb(db)  # 关闭数据库
-
-
-if __name__ == '__main__':
-    main()
