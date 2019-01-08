@@ -4,10 +4,13 @@
 # @Author  : zsj
 # @File    : base_function.py
 # @Description: 用于提供孤立森林的各种边缘功能
-
+import re
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+
+from isolate_model.isolate_class import Isolate
+
 
 def load_csv(file_name):
     """
@@ -36,7 +39,8 @@ def show_csv(array, array_x, array_y):
     label_y = array[0, array_y]
     if "timestamp" in label_x:
         # 一般来说x轴都是时间戳
-        x_value = [format_time(x) for x in x_value]
+        # x_value = [format_time(x) for x in x_value]
+        x_value = [x for x in x_value]
     else:
         x_value = [float(x) for x in x_value]
     y_value = [float(y) for y in y_value]
@@ -117,6 +121,7 @@ def draw_with_diff_color(np_array):
     print(red_arr)
     print(green_arr)
 
+
 def save_datas_with_labels(np_arrays):
     """
     存储已经由孤立森林学习过的带有标签的数据
@@ -125,10 +130,35 @@ def save_datas_with_labels(np_arrays):
     """
     pass
 
-def translate_to_xgboost(np_arrays):
+
+def str_to_time_hour_minute(time):
+    year, month, day, hour, minute, secend = re.split(r"[/ :]", time)
+    return [hour, minute]
+
+
+def translate_to_xgboost_datas(np_array):
     """
-    将孤立森林处理过的数据转换成xgboost能够识别的数据，时间格式上
+    将孤立森林处理过的数据转换成xgboost能够识别的数据，时间格式上转换
     :param np_arrays:
     :return:
     """
-    pass
+    hour_minute_array = [str_to_time_hour_minute(time) for time in np_array[1:, 1]]
+    print(hour_minute_array)
+    hour = []
+    minute = []
+    for hour_minute in hour_minute_array:
+        hour.append(int(hour_minute[0]))
+        minute.append(int(hour_minute[1]))
+    hour.insert(0, "hour")
+    minute.insert(0, "minute")
+    np_array = np.delete(np_array, 1, axis = 1)
+    np_array = np.insert(np_array, 1, values = minute, axis = 1)
+    np_array = np.insert(np_array, 1, values = hour, axis = 1)
+    return np_array
+
+cases = load_csv("../file/customs_test2.csv")
+isolate1 = Isolate('2_7', cases)
+np_array = isolate1.merge_arrays()
+print(np_array[1:, 1])
+translate_to_xgboost_datas(np_array)
+# print(str_to_time_hour_minute("2018/12/7 10:16:00")[1])

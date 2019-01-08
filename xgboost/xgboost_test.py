@@ -15,21 +15,23 @@ from isolate_model.isolate_class import Isolate
 
 cases = load_csv("../file/customs_test2.csv")
 isolate1 = Isolate('2_7', cases)
-# isolate1.init_model()
-arr = isolate1.merge_arrays()
+np_array = isolate1.merge_arrays()
 
 # 从文本文件加载文件，也是由xgboost生成的二进制缓冲区，加载能训练的文件，
-print(arr[1:, 0:-1])
-print(arr[1:, -1])
-dtrain = xgb.DMatrix(arr[1:, 0:-1], label = arr[1:, -1])
-dtest = xgb.DMatrix('../data/agaricus.txt.test')
+print(np_array[1:, 0:-1])
+print(np_array[1:, -1])
+dtrain = xgb.DMatrix(np_array[1:, 0:-1], label = np_array[1:, -1])
+dtest = xgb.DMatrix('../file/customs_test2.csv')
 
-# 通过map指定参数，
-param = {'max_depth': 2, 'eta': 1, 'silent': 1, 'objective': 'binary:logistic'}
+# 通过map指定参数，max_depth：树的最大深度，太大容易过拟合
+# eta 步长 verbosity：1警告信息 objective：binary：logistic 二分类逻辑回归，输出概率
+param = {'max_depth': 2, 'eta': 1, 'verbosity': 1, 'objective': 'binary:logistic'}
 
 # specify validations set to watch performance
-watchlist = [(dtest, 'eval'), (dtrain, 'train')]
+watchlist = [(dtrain, 'train')]
+# num_round 提升的轮次数
 num_round = 2
+# 训练数据
 bst = xgb.train(param, dtrain, num_round, watchlist)
 
 # this is prediction
@@ -70,9 +72,9 @@ col = []
 dat = []
 i = 0
 for l in open('../data/agaricus.txt.train'):
-    arr = l.split()
-    labels.append(int(arr[0]))
-    for it in arr[1:]:
+    np_array = l.split()
+    labels.append(int(np_array[0]))
+    for it in np_array[1:]:
         k, v = it.split(':')
         row.append(i);
         col.append(int(k));

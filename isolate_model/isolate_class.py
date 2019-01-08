@@ -60,7 +60,7 @@ class Isolate:
         title = np.concatenate((self.title, array_label))
         print(self.test_cases[1:, 1])
         # 拼接数据集和label
-        cases_label = np.c_[[i[:-3] for i in self.test_cases[1:, 1]], self.cases, self.label_list]
+        cases_label = np.c_[self.test_cases[1:, 1], self.cases, self.label_list]
         # 拼接title，数据集，label
         title_cases_label = np.concatenate((title.reshape(1, len(title)), cases_label), axis = 0)
         # 拼接title，数据集,label,host_id
