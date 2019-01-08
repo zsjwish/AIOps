@@ -151,8 +151,11 @@ def translate_to_xgboost_datas(np_array):
         minute.append(int(hour_minute[1]))
     hour.insert(0, "hour")
     minute.insert(0, "minute")
+    # 删除时间一列
     np_array = np.delete(np_array, 1, axis = 1)
+    # 增加分钟一列
     np_array = np.insert(np_array, 1, values = minute, axis = 1)
+    # 增加小时一列
     np_array = np.insert(np_array, 1, values = hour, axis = 1)
     return np_array
 

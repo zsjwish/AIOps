@@ -10,17 +10,18 @@ import scipy.sparse
 import pickle
 import xgboost as xgb
 
-from isolate_model.base_function import load_csv
+from isolate_model.base_function import load_csv, translate_to_xgboost_datas
 from isolate_model.isolate_class import Isolate
 
 cases = load_csv("../file/customs_test2.csv")
 isolate1 = Isolate('2_7', cases)
 np_array = isolate1.merge_arrays()
+np_array = translate_to_xgboost_datas(np_array)
 
 # 从文本文件加载文件，也是由xgboost生成的二进制缓冲区，加载能训练的文件，
-print(np_array[1:, 0:-1])
-print(np_array[1:, -1])
-dtrain = xgb.DMatrix(np_array[1:, 0:-1], label = np_array[1:, -1])
+print(np_array[1:, 1:-1].astype(float))
+print(np_array[1:, -1].astype(int))
+dtrain = xgb.DMatrix(np_array[1:, 1:-1].astype(float), label = np_array[1:, -1].astype(int))
 dtest = xgb.DMatrix('../file/customs_test2.csv')
 
 # 通过map指定参数，max_depth：树的最大深度，太大容易过拟合
