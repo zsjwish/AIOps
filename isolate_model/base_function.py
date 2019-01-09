@@ -159,9 +159,9 @@ def translate_to_xgboost_datas(np_array):
     np_array = np.insert(np_array, 1, values = hour, axis = 1)
     return np_array
 
+
 cases = load_csv("../file/customs_test2.csv")
 isolate1 = Isolate('2_7', cases)
 np_array = isolate1.merge_arrays()
 print(np_array[1:, 1])
 translate_to_xgboost_datas(np_array)
-# print(str_to_time_hour_minute("2018/12/7 10:16:00")[1])

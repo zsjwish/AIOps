@@ -33,7 +33,6 @@ from isolate_model.base_function import get_uniform_cases
 # n4 = np.concatenate((n1,n2,n3))
 # print(n4)
 
-t = tuple()
-print(t)
-print(len(t))
-
+arr = np.arange(90).reshape((30, 3))
+np.random.shuffle(arr)
+print(arr)
