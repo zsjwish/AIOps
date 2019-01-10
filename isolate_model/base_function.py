@@ -4,14 +4,11 @@
 # @Author  : zsj
 # @File    : base_function.py
 # @Description: 用于提供孤立森林的各种边缘功能
-
 import re
 import time
 from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
-
-from isolate_model.isolate_class import Isolate
 
 
 def load_csv(file_name):
@@ -136,7 +133,6 @@ def save_datas_with_labels(np_arrays):
 def str_to_time_hour_minute(time):
     week = datetime.strptime(re.split(r" ", time)[0], "%Y/%m/%d").weekday()
     year, month, day, hour, minute, secend = re.split(r"[/ :]", time)
-    print(week, hour, minute)
     return [hour, minute, week]
 
 
@@ -147,7 +143,6 @@ def translate_to_xgboost_datas(np_array):
     :return:
     """
     hour_minute_week_array = [str_to_time_hour_minute(time) for time in np_array[1:, 1]]
-    print(hour_minute_week_array)
     hour = []
     minute = []
     week = []
@@ -167,10 +162,3 @@ def translate_to_xgboost_datas(np_array):
     # 增加星期一列
     np_array = np.insert(np_array, 1, values = week, axis = 1)
     return np_array
-
-
-# cases = load_csv("../file/customs_test2.csv")
-# isolate1 = Isolate('2_7', cases)
-# np_array = isolate1.merge_arrays()
-# print(np_array[1:, 1])
-# translate_to_xgboost_datas(np_array)

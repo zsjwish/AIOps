@@ -10,10 +10,13 @@ from isolate_model.base_function import load_csv, show_csv, get_uniform_cases
 import pandas as pd
 import numpy as np
 
-data=load_csv("../file/big_testcase.csv")
-data1 = get_uniform_cases(data)
-print(data1)
-show_csv(data1, 1, 2)
-show_csv(data1, 1, 3)
-show_csv(data1, 1, 4)
+#
+# data=load_csv("../file/big_testcase.csv")
+# data1 = get_uniform_cases(data)
+# print(data1)
+# show_csv(data1, 1, 2)
+# show_csv(data1, 1, 3)
+# show_csv(data1, 1, 4)
 
+l = [1, 2, 3, 4, 5, 6]
+print(sum(l))

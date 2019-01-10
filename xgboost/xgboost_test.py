@@ -6,14 +6,12 @@
 # @Description:
 
 import numpy as np
-import scipy.sparse
-import pickle
 import xgboost as xgb
 
 from isolate_model.base_function import load_csv, translate_to_xgboost_datas
 from isolate_model.isolate_class import Isolate
 
-cases = load_csv("../file/customs_test2.csv")
+cases = load_csv("../file/customs_cpu_test.csv")
 isolate1 = Isolate('2_7', cases)
 np_array = isolate1.merge_arrays()
 np_array = translate_to_xgboost_datas(np_array)
@@ -22,11 +20,20 @@ np_array = translate_to_xgboost_datas(np_array)
 np_array = np_array[1:]
 length = len(np_array)
 print(length)
-# 按行打乱顺序，然后从中选择9份训练集，1份测试集
+# 按行打乱顺序，然后从中选择训练集，测试集, 验证集
 np.random.shuffle(np_array)
-dtrain = xgb.DMatrix(np_array[0:int(length / 10 * 9), 1:-1].astype(float), label = np_array[0: int(length / 10 * 9), -1].astype(int))
-dtest = xgb.DMatrix(np_array[int(length / 10 * 9) + 1: -1, 1:-1].astype(float), label = np_array[int(length / 10 * 9) + 1: -1, -1].astype(int))
-
+rate = [8, 1, 1]
+total_rate = sum(rate)
+rate_num1 = int(length * rate[0] / total_rate)
+rate_num2 = int(length * (rate[0] + rate[1]) / total_rate)
+print(rate_num1)
+print(rate_num2 - rate_num1)
+dtrain = xgb.DMatrix(np_array[0:rate_num1, 1:-1].astype(float),
+                     label = np_array[0: rate_num1, -1].astype(int))
+dtest = xgb.DMatrix(np_array[rate_num1 + 1: rate_num2, 1:-1].astype(float),
+                    label = np_array[rate_num1 + 1: rate_num2, -1].astype(int))
+verify = xgb.DMatrix(np_array[rate_num2 + 1: -1, 1:-1].astype(float),
+                     label = np_array[rate_num2 + 1: -1, -1].astype(int))
 # 通过map指定参数，max_depth：树的最大深度，太大容易过拟合
 # xgboost参数
 param = {
@@ -40,14 +47,23 @@ param = {
 }
 
 # specify validations set to watch performance
-watchlist = [(dtrain, 'train1'), (dtest, 'test1')]
+watchlist = [(dtrain, 'train1'), (dtest, 'test1'), (verify, 'verify1')]
 # num_round 提升的轮次数
-num_round = 8
+num_round = 10
 # 训练数据
 bst = xgb.train(param, dtrain, num_round, watchlist)
 
 # 测试集预测
 preds = bst.predict(dtest)
+print(preds)
+print(len(preds))
+print(sum(preds >= 0.5))
+print(sum(preds < 0.5))
+# 测试预测
+np_test = np.array([[2, 19, 22, 99.3], [3, 10, 10, 6.36]])
+test_matrix = xgb.DMatrix(np_test)
+pre_test = bst.predict(test_matrix)
+print(pre_test)
 # 测试集label，用于计算测试集错误率
 labels = dtest.get_label()
 # 测试集错误率
@@ -56,7 +72,9 @@ print('error=%f' % (sum(1 for i in range(len(preds)) if int(preds[i] > 0.5) != l
 bst.save_model('0001.model')
 # 模型及其特征映射也可以转储到文本文件中
 bst.dump_model('dump.raw.txt')
-# 存储模型特征
+
+bst.load_model('model.bin')
+# 存储模型特征xr
 # bst.dump_model('dump.nice.txt', 'featmap.txt')
 
 # save dmatrix into binary buffer

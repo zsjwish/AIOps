@@ -79,7 +79,6 @@ class Isolate:
         :param end_row:  结束行数
         :return:
         """
-
         # 获取异常检测结果，存放在list中
         multy_res = self.clf.predict(datas[start_row:end_row].astype(np.float32))
         for i in range(0, len(multy_res)):
