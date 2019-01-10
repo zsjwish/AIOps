@@ -34,7 +34,7 @@ class Isolate:
         self.rate = rate
         # 随机因子，以时间戳为随机因子
         self.rng = np.random.RandomState()
-        # label初始化
+        # label初始化并都置位0，后续判断为1后再更新
         self.label_list = np.zeros((len(self.cases), 1), dtype = int)
         # 初始化模型，如果模型要更改就直接在该函数中修改
         self.clf = IsolationForest(behaviour = 'new', max_samples = self.cases_size,
@@ -54,6 +54,10 @@ class Isolate:
         print("result:", self.merge_arrays())
 
     def merge_arrays(self):
+        """
+        重新拼接数据，包括title, label，数据集，host_id等
+        :return:
+        """
         print(self.title)
         print(type(self.title))
         array_label = np.array(["label"])
@@ -68,6 +72,13 @@ class Isolate:
         return res
 
     def init_fit(self, datas, start_row, end_row):
+        """
+        批量训练并判断是否异常
+        :param datas:
+        :param start_row:
+        :param end_row:
+        :return:
+        """
         self.clf.fit(datas[start_row:end_row])
         self.judge_multy(datas, start_row, end_row)
 
@@ -79,33 +90,11 @@ class Isolate:
         :param end_row:  结束行数
         :return:
         """
-        # 获取异常检测结果，存放在list中
+        # 获取异常检测结果，结果放在label_list中
         multy_res = self.clf.predict(datas[start_row:end_row].astype(np.float32))
         for i in range(0, len(multy_res)):
             if multy_res[i] == -1:
                 self.label_list[start_row + i] = 1
-        # return multy_res
-        # #如果list中没有-1，则返回True
-        # if sum(multy_res == -1) == 0:
-        #     return True, None
-        # #否则首先获取到异常集大小
-        # abnormal_size = sum(multy_res == -1)
-        # #重新整理host_id
-        # res_host_id = datas[:abnormal_size+1, 0].reshape(abnormal_size+1,1)
-        # #整理异常数据集
-        # res_cases = datas[1:, 1:]
-        # res_cases = res_cases[multy_res == -1]
-        # #整理title
-        # res_title = datas[0, 1:].reshape(1,len(self.title))
-        # #拼接title和异常数据集
-        # res_tmp = np.concatenate((res_title, res_cases), axis=0)
-        # #拼接title，异常数据集，host_id
-        # res = np.concatenate((res_host_id, res_tmp), axis = 1)
-        # 返回False，异常数据集
-        # print("--------异常检测完成-------")
-        # print("--------异常数据：---------")
-        # print(res)
-        # return False, res
 
     def get_data(self, time_start, time_end, condition):
         """

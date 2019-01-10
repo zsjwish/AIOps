@@ -65,7 +65,7 @@ def create_table(db, np_array_field, table_name):
         return True
     except:
         # 如果失败则回滚
-        print('创建数据表失败!')
+        print('创建数据表失败')
         db.rollback()
         return False
 
@@ -108,7 +108,7 @@ def insert_datas(db, np_array):
         return True
     except:
         # 如果失败则回滚
-        print('插入数据失败!')
+        print('插入数据失败')
         db.rollback()
         return False
 
@@ -145,7 +145,7 @@ def query_datas(db, table_name, label=(0, 1), start_time=0, end_time=0):
         results = cursor.fetchall()
         return results
     except:
-        print("Error: unable to fecth data")
+        print("获取数据失败")
         return None
 
 
@@ -179,7 +179,7 @@ def update_datas(db, table_name, label, start_time=0, end_time=0):
         db.commit()
         return True
     except:
-        print('更新数据失败!')
+        print('更新数据失败')
         # 发生错误时回滚
         db.rollback()
         return False
