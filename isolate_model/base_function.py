@@ -4,8 +4,10 @@
 # @Author  : zsj
 # @File    : base_function.py
 # @Description: 用于提供孤立森林的各种边缘功能
+
 import re
 import time
+from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -132,8 +134,10 @@ def save_datas_with_labels(np_arrays):
 
 
 def str_to_time_hour_minute(time):
+    week = datetime.strptime(re.split(r" ", time)[0], "%Y/%m/%d").weekday()
     year, month, day, hour, minute, secend = re.split(r"[/ :]", time)
-    return [hour, minute]
+    print(week, hour, minute)
+    return [hour, minute, week]
 
 
 def translate_to_xgboost_datas(np_array):
@@ -142,21 +146,27 @@ def translate_to_xgboost_datas(np_array):
     :param np_arrays:
     :return:
     """
-    hour_minute_array = [str_to_time_hour_minute(time) for time in np_array[1:, 1]]
-    print(hour_minute_array)
+    hour_minute_week_array = [str_to_time_hour_minute(time) for time in np_array[1:, 1]]
+    print(hour_minute_week_array)
     hour = []
     minute = []
-    for hour_minute in hour_minute_array:
-        hour.append(int(hour_minute[0]))
-        minute.append(int(hour_minute[1]))
+    week = []
+    for hour_minute_week in hour_minute_week_array:
+        hour.append(int(hour_minute_week[0]))
+        minute.append(int(hour_minute_week[1]))
+        week.append((int(hour_minute_week[2])))
     hour.insert(0, "hour")
     minute.insert(0, "minute")
+    week.insert(0, "week")
     # 删除时间一列
     np_array = np.delete(np_array, 1, axis = 1)
     # 增加分钟一列
     np_array = np.insert(np_array, 1, values = minute, axis = 1)
     # 增加小时一列
     np_array = np.insert(np_array, 1, values = hour, axis = 1)
+    # 增加星期一列
+    np_array = np.insert(np_array, 1, values = week, axis = 1)
+    print(np_array)
     return np_array
 
 
