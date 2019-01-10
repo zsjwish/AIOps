@@ -6,7 +6,6 @@
 # @Description:
 import numpy as np
 
-from isolate_model.base_function import get_uniform_cases
 
 # def get_uniform(num):
 #     res = np.linspace(0,num,256)

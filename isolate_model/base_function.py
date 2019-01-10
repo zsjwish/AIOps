@@ -166,12 +166,11 @@ def translate_to_xgboost_datas(np_array):
     np_array = np.insert(np_array, 1, values = hour, axis = 1)
     # 增加星期一列
     np_array = np.insert(np_array, 1, values = week, axis = 1)
-    print(np_array)
     return np_array
 
 
-cases = load_csv("../file/customs_test2.csv")
-isolate1 = Isolate('2_7', cases)
-np_array = isolate1.merge_arrays()
-print(np_array[1:, 1])
-translate_to_xgboost_datas(np_array)
+# cases = load_csv("../file/customs_test2.csv")
+# isolate1 = Isolate('2_7', cases)
+# np_array = isolate1.merge_arrays()
+# print(np_array[1:, 1])
+# translate_to_xgboost_datas(np_array)
