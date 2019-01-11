@@ -1,6 +1,6 @@
 import unittest
 
-from db.mysql_operation import connectdb, query_table, create_table, drop_table, query_datas, insert_datas, closedb, \
+from db.mysql_operation import connectdb, query_table, create_table, drop_table, query_datas, insert_train_datas, closedb, \
     delete_datas, update_datas
 from isolate_model.base_function import load_csv
 from isolate_model.isolate_class import Isolate
@@ -44,7 +44,7 @@ class MysqlTestCases(unittest.TestCase):
         # 没插入数据之前为0条
         self.assertEqual(0, len(query_result))
         # 插入数据
-        insert_datas(self.db, self.np_array)
+        insert_train_datas(self.db, self.np_array)
         # 测试查询数据
         query_result = query_datas(self.db, self.table_name)
         self.assertEqual(3, len(query_result))
@@ -57,7 +57,7 @@ class MysqlTestCases(unittest.TestCase):
         # 创建表操作
         create_table(self.db, self.np_array[0], self.np_array[1, 0])
         # 插入数据
-        insert_datas(self.db, self.np_array)
+        insert_train_datas(self.db, self.np_array)
         # 删除数据
         delete_datas(self.db, self.table_name, end_time = '2019/01/07 10:15')
         # 查询删除数据后的数据
@@ -91,7 +91,7 @@ class MysqlTestCases(unittest.TestCase):
         # 创建表操作
         create_table(self.db, self.np_array[0], self.np_array[1, 0])
         # 插入数据
-        insert_datas(self.db, self.np_array)
+        insert_train_datas(self.db, self.np_array)
         # 获取数据
         query_result = query_datas(self.db, self.table_name)
         print(query_result)

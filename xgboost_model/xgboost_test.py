@@ -18,6 +18,7 @@ np_array = translate_to_xgboost_datas(np_array)
 
 # 从文本文件加载文件，也是由xgboost生成的二进制缓冲区，加载能训练的文件，
 np_array = np_array[1:]
+print("nparray",np_array)
 length = len(np_array)
 print(length)
 # 按行打乱顺序，然后从中选择训练集，测试集, 验证集

@@ -5,7 +5,7 @@
 # @File    : db_test.py
 # @Description:
 from db.mysql_operation import connectdb, create_table, query_table, query_datas, update_datas, delete_datas, \
-    drop_table, insert_datas, closedb
+    drop_table, insert_train_datas, closedb
 from isolate_model.base_function import load_csv
 from isolate_model.isolate_class import Isolate
 
@@ -21,6 +21,6 @@ is_exists = query_table(db, table_name)
 if not is_exists:
     create_table(db, np_array[0], table_name)
 # 插入数据
-insert_datas(db, np_array)
+insert_train_datas(db, np_array)
 result = query_datas(db, table_name)
 print(len(result))

@@ -10,6 +10,8 @@ from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 
+from db.mysql_operation import connectdb, query_datas
+
 
 def load_csv(file_name):
     """
@@ -138,7 +140,7 @@ def str_to_time_hour_minute(time):
 
 def translate_to_xgboost_datas(np_array):
     """
-    将孤立森林处理过的数据转换成xgboost能够识别的数据，时间格式上转换
+    将孤立森林处理过的数据转换成xgboost能够识别的数据，仅仅在时间格式上转换，其他列不变
     :param np_arrays:
     :return:
     """
@@ -164,3 +166,24 @@ def translate_to_xgboost_datas(np_array):
     return np_array
 
 
+def load_data_from_mysql(table_name):
+    db = connectdb()
+    np_array = np.array(query_datas(db, table_name = table_name))
+    # 删除id列
+    np_array = np.delete(np_array, 0, axis = 1)
+    # 获取时间列
+    time_array = np_array[:, 0]
+    # 删除时间列
+    np_array = np.delete(np_array, 0, axis = 1)
+    hour = []
+    minute = []
+    week = []
+    for time in time_array:
+        hour.append(time.hour)
+        minute.append(time.minute)
+        week.append(time.weekday())
+    np_array = np.insert(np_array, 0, values = minute, axis = 1)
+    np_array = np.insert(np_array, 0, values = hour, axis = 1)
+    np_array = np.insert(np_array, 0, values = week, axis = 1)
+    # 此时返回的属性分别是 week, hour, minute, kpi_1... kpi_n,label
+    return np_array
