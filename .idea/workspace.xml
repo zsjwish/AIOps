@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="640412a6-3638-4df7-bc56-082e592ce08a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/mysql_operation.py" beforeDir="false" afterPath="$PROJECT_DIR$/db/mysql_operation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/isolate_model/isolate_class.py" beforeDir="false" afterPath="$PROJECT_DIR$/isolate_model/isolate_class.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/array_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/array_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/xgboost/xgboost_class.py" beforeDir="false" afterPath="$PROJECT_DIR$/xgboost/xgboost_class.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,7 +35,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/xgboost/xgboost_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-126">
+            <state relative-caret-position="1365">
               <caret line="69" selection-start-line="69" selection-end-line="69" selection-end-column="111" />
               <folding>
                 <element signature="e#140#158#0" expanded="true" />
@@ -50,10 +47,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/xgboost/xgboost_class.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
-              <caret line="59" column="27" selection-start-line="59" selection-start-column="27" selection-end-line="59" selection-end-column="27" />
+            <state relative-caret-position="105">
+              <caret line="41" column="9" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
               <folding>
-                <element signature="e#140#158#0" expanded="true" />
+                <element signature="e#140#151#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -65,8 +62,8 @@
             <state showInfoPanel="true" rowLines="3" />
           </provider>
           <provider selected="true" editor-type-id="csv-text-editor">
-            <state relative-caret-position="105">
-              <caret line="62" column="36" lean-forward="true" selection-start-line="62" selection-start-column="36" selection-end-line="62" selection-end-column="62" />
+            <state relative-caret-position="1302">
+              <caret line="62" column="36" selection-start-line="62" selection-start-column="36" selection-end-line="62" selection-end-column="62" />
             </state>
           </provider>
         </entry>
@@ -74,7 +71,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://E:/python3/Lib/site-packages/sklearn/ensemble/iforest.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2080">
+            <state relative-caret-position="4914">
               <caret line="249" selection-start-line="249" selection-end-line="249" />
             </state>
           </provider>
@@ -83,8 +80,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/array_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="23" column="21" lean-forward="true" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
+            <state relative-caret-position="399">
+              <caret line="23" column="21" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
               <folding>
                 <element signature="e#137#147#0" expanded="true" />
               </folding>
@@ -95,8 +92,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/isolate_model/isolate_class.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1722">
-              <caret line="97" lean-forward="true" selection-start-line="97" selection-end-line="106" selection-end-column="12" />
+            <state relative-caret-position="2016">
+              <caret line="97" selection-start-line="97" selection-end-line="106" selection-end-column="12" />
               <folding>
                 <element signature="e#140#158#0" expanded="true" />
               </folding>
@@ -107,7 +104,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db/mysql_operation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1223">
+            <state relative-caret-position="1407">
               <caret line="67" column="22" selection-start-line="67" selection-start-column="22" selection-end-line="67" selection-end-column="22" />
             </state>
           </provider>
@@ -116,7 +113,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/isolate_model/base_function.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
+            <state relative-caret-position="2730">
               <caret line="134" column="69" selection-start-line="134" selection-start-column="69" selection-end-line="134" selection-end-column="69" />
             </state>
           </provider>
@@ -419,7 +416,8 @@
       <workItem from="1546838667506" duration="13333000" />
       <workItem from="1546916564642" duration="9173000" />
       <workItem from="1547010513875" duration="16373000" />
-      <workItem from="1547089731235" duration="20424000" />
+      <workItem from="1547089731235" duration="20496000" />
+      <workItem from="1547178486623" duration="4851000" />
     </task>
     <servers />
   </component>
@@ -456,7 +454,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="184979000" />
+    <option name="totallyTimeSpent" value="189902000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -471,12 +469,12 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18900804" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19101876" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.45184135" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.33569404" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.33569404" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.5184136" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -484,7 +482,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.3286119" />
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.4362606" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.2592068" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.2592068" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -692,14 +690,14 @@
       <provider editor-type-id="csv-table-editor">
         <state showInfoPanel="true" rowLines="3" />
       </provider>
-      <provider selected="true" editor-type-id="csv-text-editor">
-        <state>
-          <caret column="25" selection-start-column="25" selection-end-column="25" />
-        </state>
-      </provider>
       <provider editor-type-id="text-editor">
         <state>
           <caret column="9" selection-end-column="9" />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="csv-text-editor">
+        <state>
+          <caret column="25" selection-start-column="25" selection-end-column="25" />
         </state>
       </provider>
     </entry>
@@ -878,10 +876,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://E:/python3/Lib/site-packages/sklearn/ensemble/iforest.py">
+    <entry file="file://$PROJECT_DIR$/xgboost/xgboost_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2080">
-          <caret line="249" selection-start-line="249" selection-end-line="249" />
+        <state relative-caret-position="1365">
+          <caret line="69" selection-start-line="69" selection-end-line="69" selection-end-column="111" />
+          <folding>
+            <element signature="e#140#158#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -890,22 +891,32 @@
         <state showInfoPanel="true" rowLines="3" />
       </provider>
       <provider selected="true" editor-type-id="csv-text-editor">
-        <state relative-caret-position="105">
-          <caret line="62" column="36" lean-forward="true" selection-start-line="62" selection-start-column="36" selection-end-line="62" selection-end-column="62" />
+        <state relative-caret-position="1302">
+          <caret line="62" column="36" selection-start-line="62" selection-start-column="36" selection-end-line="62" selection-end-column="62" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/isolate_model/base_function.py">
+    <entry file="file://E:/python3/Lib/site-packages/sklearn/ensemble/iforest.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="134" column="69" selection-start-line="134" selection-start-column="69" selection-end-line="134" selection-end-column="69" />
+        <state relative-caret-position="4914">
+          <caret line="249" selection-start-line="249" selection-end-line="249" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/array_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="23" column="21" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
+          <folding>
+            <element signature="e#137#147#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/isolate_model/isolate_class.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1722">
-          <caret line="97" lean-forward="true" selection-start-line="97" selection-end-line="106" selection-end-column="12" />
+        <state relative-caret-position="2016">
+          <caret line="97" selection-start-line="97" selection-end-line="106" selection-end-column="12" />
           <folding>
             <element signature="e#140#158#0" expanded="true" />
           </folding>
@@ -914,37 +925,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/db/mysql_operation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1223">
+        <state relative-caret-position="1407">
           <caret line="67" column="22" selection-start-line="67" selection-start-column="22" selection-end-line="67" selection-end-column="22" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/array_test.py">
+    <entry file="file://$PROJECT_DIR$/isolate_model/base_function.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="23" column="21" lean-forward="true" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
-          <folding>
-            <element signature="e#137#147#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/xgboost/xgboost_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-126">
-          <caret line="69" selection-start-line="69" selection-end-line="69" selection-end-column="111" />
-          <folding>
-            <element signature="e#140#158#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="2730">
+          <caret line="134" column="69" selection-start-line="134" selection-start-column="69" selection-end-line="134" selection-end-column="69" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/xgboost/xgboost_class.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="59" column="27" selection-start-line="59" selection-start-column="27" selection-end-line="59" selection-end-column="27" />
+        <state relative-caret-position="105">
+          <caret line="41" column="9" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
           <folding>
-            <element signature="e#140#158#0" expanded="true" />
+            <element signature="e#140#151#0" expanded="true" />
           </folding>
         </state>
       </provider>

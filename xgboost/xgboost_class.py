@@ -4,6 +4,8 @@
 # @Author  : zsj
 # @File    : xgboost_class.py
 # @Description:
+import time
+
 import numpy as np
 import xgboost as xgb
 
@@ -22,11 +24,12 @@ class Xgboost:
         }
         # 决策树的颗数
         self.num_round = 10
-        # 准确率
-        self.accuracy = 0.
+        # 精确率
+        self.precision = 0.
         # 召回率
         self.recall = 0.
-
+        # F1值
+        self.f1 = 0.
         # 按行打乱顺序，然后从中选择训练集，测试集, 验证集
         np.random.shuffle(datas)
         self.datas = datas
@@ -44,6 +47,8 @@ class Xgboost:
                                  label = self.datas[rate_num1 + 1: -1, -1].astype(int))
         # 显示训练过程
         self.watchlist = [(self.dtrain, 'train'), (self.dtest, 'test')]
+        # 模型初始化时间
+        self.create_time = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
 
     def train_model(self):
         # 训练模型并使用验证集验证
@@ -52,19 +57,31 @@ class Xgboost:
         preds = bst.predict(self.dtest)
         # 原本测试集的label
         labels = self.dtest.get_label()
-        accuraty = 0
-
+        # 真实为1，预测为1
+        TP = 0
+        # 真实为1，预测为0
+        FN = 0
+        # 真实为0，预测为1
+        FP = 0
         for i, label in enumerate(labels):
-            if int(preds[i]) != label:
-                pass
-                # 得出精确率和召回率
-        print('error=%f' % (sum(1 for i in range(len(preds)) if int(preds[i] > 0.5) != labels[i]) / float(len(preds))))
+            if preds[i] >= 0.5:
+                if label == 1:
+                    TP += 1
+                else:
+                    FP += 1
+            elif label == 1:
+                FN += 1
+        # 得出精确率和召回率
+        self.precision = TP / float(TP + FP)
+        self.recall = TP / float(TP + FN)
+        self.f1 = self.precision * self.recall * 2 / float(self.precision + self.recall)
         return bst
 
     def predict(self, data):
         pass
 
     def insert_database(self):
+        pass
 
     def save_model(self):
         pass

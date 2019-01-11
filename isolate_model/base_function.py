@@ -162,3 +162,5 @@ def translate_to_xgboost_datas(np_array):
     # 增加星期一列
     np_array = np.insert(np_array, 1, values = week, axis = 1)
     return np_array
+
+
