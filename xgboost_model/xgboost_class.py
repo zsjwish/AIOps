@@ -21,9 +21,10 @@ class Xgboost:
             'verbosity': 0,  # verbosity：1警告信息
             'objective': 'binary:logistic',  # objective：binary：logistic 二分类逻辑回归，输出概率
             'max_depth': 10,  # 最大深度，默认为6
-            'eta': 0.05,  # eta 步长
-            'subsample': 0.9,  # 每次取0.9比例的样本，防止过拟合
-            'evals': 'auc'
+            'eta': 0.7,  # eta 步长同learning_rate，步长，越小算法越保守，默认0.3
+            'subsample': 0.7,  # 每次取一定比例的样本进行训练，防止过拟合，默认为1
+            'evals': ['error', 'auc', 'rmse']  # 验证数据的评估指标，将根据目标分配默认指标
+
         }
         # 决策树的颗数
         self.num_round = 10
@@ -52,7 +53,7 @@ class Xgboost:
         # 按行打乱顺序，然后从中选择训练集，测试集, 验证集
         np.random.shuffle(datas)
         # 训练集和测试集取9:1，用于取准备率和召回率
-        rate = [9, 1]
+        rate = [7, 3]
         # 训练集总数量
         self.trained_number = len(datas)
         # 总比例，用于取出训练集和测试集
@@ -78,18 +79,28 @@ class Xgboost:
         FN = 0
         # 真实为0，预测为1
         FP = 0
+        # 真实为0，预测为0
+        TN = 0
+        p = []
         for i, label in enumerate(labels):
+            p.append(int(preds[i] + 0.5))
             if preds[i] >= 0.5:
                 if label == 1:
                     TP += 1
                 else:
                     FP += 1
-            elif label == 1:
-                FN += 1
+            else:
+                if label == 1:
+                    FN += 1
+                else:
+                    TN += 1
         print("TP", TP)
         print("FN", FN)
         print("FP", FP)
-        print("lenght", len(labels))
+        print("TN", TN)
+        print("length", len(labels))
+        print(p)
+        print(labels)
         # 得出精确率、召回率和F1
         self.precision = TP / float(TP + FP)
         self.recall = TP / float(TP + FN)
@@ -97,9 +108,9 @@ class Xgboost:
         self.lasted_update = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         # 更新模型
         self.model = bst
-        # 返回模型
         # 插入数据库
         self.insert_database()
+        # 返回模型
         return bst
 
     def predict(self, data):
