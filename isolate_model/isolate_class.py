@@ -96,12 +96,3 @@ class Isolate:
             if multy_res[i] == -1:
                 self.label_list[start_row + i] = 1
 
-    def get_data(self, time_start, time_end, condition):
-        """
-        按条件查询某时间段内的数据,需要数据库
-        :param time_start:
-        :param time_end:
-        :param condition:
-        :return:
-        """
-        pass

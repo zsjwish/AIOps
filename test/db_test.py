@@ -21,6 +21,6 @@ is_exists = query_table(db, table_name)
 if not is_exists:
     create_table(db, np_array[0], table_name)
 # 插入数据
-insert_train_datas(db, np_array)
+insert_train_datas(db, table_name, np_array[1:])
 result = query_datas(db, table_name)
 print(len(result))

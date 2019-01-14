@@ -70,34 +70,28 @@ def create_table(db, np_array_field, table_name):
         return False
 
 
-def insert_train_datas(db, np_array):
+def insert_train_datas(db, table_name, np_array):
     """
     训练时批量插入数据到表中
+    :param table_name: 表名
     :param db:
-    :param np_array: 整个数据集，包括第一行字段名和后面的数据行
+    :param np_array: 要插入的数据集，不包括第一样，因为在实时检测中不会带第一行
     :return:True 或者 False代表插入成功与否
     """
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
-    table_name = np_array[1, 0]
-
-    # 插入的字段名，因为有一个主键是自增的
-    fileds = "time,"
-    for filed in np_array[0, 2:]:
-        fileds += filed + ","
-    fileds = fileds[:-1]
 
     # 待插入的数据，格式为(time,kpi_1...kpi_n, label),(time,kpi_1...kpi_n, label)...(time,kpi_1...kpi_n, label)
     datas_sql = ""
-    for data in np_array[1:]:
-        datas_sql += "('%s'," % (data[1])
+    for data in np_array[:]:
+        datas_sql += "(0, '%s', " % (data[1])
         for i in range(2, len(data) - 1):
             datas_sql += "%f" % (float(data[i])) + ","
         datas_sql += "%d" % (int(data[-1])) + "),"
     datas_sql = datas_sql[:-1]
 
     # sql 插入语句,确定表名，字段名（有自增字段）,和插入内容
-    sql = "INSERT INTO `%s`(%s) VALUES %s" % (table_name, fileds, datas_sql)
+    sql = "INSERT INTO `%s` VALUES %s" % (table_name, datas_sql)
     print(sql)
 
     try:

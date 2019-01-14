@@ -15,10 +15,10 @@ isolate1 = Isolate('2_7', cases)
 np_array = isolate1.merge_arrays()
 table_name = np_array[1, 0]
 db = connectdb()
-# if not query_table(db, table_name):
-#     create_table(db, np_array[0], table_name)
-#
-# insert_train_datas(db, np_array)
+if not query_table(db, table_name):
+    create_table(db, np_array[0], table_name)
+
+insert_train_datas(db, table_name, np_array[1:])
 
 
 xgb1 = Xgboost(table_name)
