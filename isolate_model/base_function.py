@@ -4,6 +4,7 @@
 # @Author  : zsj
 # @File    : base_function.py
 # @Description: 用于提供孤立森林的各种边缘功能
+import pickle
 import re
 import time
 from datetime import datetime
@@ -140,9 +141,9 @@ def str_to_time_hour_minute(time):
 
 def translate_to_xgboost_datas(np_array):
     """
-    将孤立森林处理过的数据转换成xgboost能够识别的数据，仅仅在时间格式上转换，其他列不变
-    :param np_arrays:
-    :return:
+    将数据转换成xgboost能够识别的数据，仅仅在时间格式上转换，其他列不变
+    :param np_array:输入的数组
+    :return:时间转换后的数组，仅仅在时间上做出改变，其他列不变
     """
     hour_minute_week_array = [str_to_time_hour_minute(time) for time in np_array[1:, 1]]
     hour = []
@@ -187,3 +188,24 @@ def load_data_from_mysql(table_name):
     np_array = np.insert(np_array, 0, values = week, axis = 1)
     # 此时返回的属性分别是 week, hour, minute, kpi_1... kpi_n,label
     return np_array
+
+
+def save_xgboost_class(model):
+    """
+    xgboost 模型持久化，存储在models目录下，使用model.name作为文件名
+    :param model:
+    :return:
+    """
+    file_name = "../models/%s" % model.name
+    with open(file_name, 'wb') as file_obj:
+        pickle.dump(model, file_obj)
+
+
+def load_xgboost_class(model_name):
+    """
+    根据模型名称加载模型，返回model
+    :param model_name:模型名
+    :return: 返回模型
+    """
+    file_name = "../models/%s" % model_name
+    return pickle.load(open(file_name, "rb"))

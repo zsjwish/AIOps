@@ -278,6 +278,56 @@ def insert_xgboost_model(model_name, precision=0., recall=0., f1=0., trained=0, 
         return False
 
 
+def update_xgboost_model(model_name, precision=0., recall=0., f1=0., trained=0, finished=0, changed=0, lasted_update=0):
+    """
+    插入xgboost训练数据到数据库表中
+    :param db:
+    :param model_name: 模型名称
+    :param precision: 精确率
+    :param recall: 召回率
+    :param f1: f1值
+    :param trained: 已经训练多少数据
+    :param finished: 是否训练完成
+    :param changed: 模型数据是否重新更改，如更改则需要重新训练数据
+    :param lasted_update: 最后更新模型时间
+    :return: true插入成功，false插入失败
+    """
+    # update 条件
+    condition = ""
+    if precision != 0:
+        condition += "`precision` = %f," % precision
+    if recall != 0:
+        condition += "`recall` = %f," % recall
+    if f1 != 0:
+        condition += "`f1` = %f," % f1
+    if trained != 0:
+        condition += "`trained` = %d," % trained
+    if finished != 0:
+        condition += "`finished` = %d," % finished
+    if changed != 0:
+        condition += "`changed` = %d," % changed
+    if lasted_update != 0:
+        condition += "`lasted_update` = '%s'" % lasted_update
+    print(condition)
+
+    db = connectdb()
+    cursor = db.cursor()
+    # sql 插入语句,确定表名，字段名（有自增字段）,和插入内容
+    sql = "UPDATE `model` set %s where `model_name` = '%s'" % (condition, model_name)
+    print(sql)
+    try:
+        # 执行sql语句
+        cursor.execute(sql)
+        # 提交到数据库执行
+        db.commit()
+        return True
+    except:
+        # 如果失败则回滚
+        print('插入数据失败')
+        db.rollback()
+        return False
+
+
 def closedb(db):
     """
     关闭数据库连接

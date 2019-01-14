@@ -4,12 +4,13 @@
 # @Author  : zsj
 # @File    : xgboost_class.py
 # @Description:
+import pickle
 import time
 
 import numpy as np
 import xgboost as xgb
 
-from db.mysql_operation import insert_xgboost_model
+from db.mysql_operation import insert_xgboost_model, update_xgboost_model
 from isolate_model.base_function import load_data_from_mysql
 
 
@@ -44,6 +45,8 @@ class Xgboost:
         self.create_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         # 模型最后更新时间
         self.lasted_update = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        # 插入数据库
+        self.insert_database_model()
         # 初始化模型
         self.model = self.init_model()
 
@@ -60,10 +63,11 @@ class Xgboost:
         total_rate = sum(rate)
         rate_num1 = int(self.trained_number * rate[0] / total_rate)
         # 训练集
-        dtrain = xgb.DMatrix(datas[0:rate_num1, 1:-1].astype(float),
+        print(datas)
+        dtrain = xgb.DMatrix(datas[0:rate_num1, 0:-1].astype(float),
                              label = datas[0: rate_num1, -1].astype(int))
-        # 测试集
-        dtest = xgb.DMatrix(datas[rate_num1 + 1: -1, 1:-1].astype(float),
+        # 验证集
+        dtest = xgb.DMatrix(datas[rate_num1 + 1: -1, 0:-1].astype(float),
                             label = datas[rate_num1 + 1: -1, -1].astype(int))
         # 训练模型并使用验证集验证
         # 显示训练过程
@@ -108,22 +112,41 @@ class Xgboost:
         self.lasted_update = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         # 更新模型
         self.model = bst
-        # 插入数据库
-        self.insert_database()
+        # 更新数据库
+        self.update_database_model()
         # 返回模型
         return bst
 
     def predict(self, data):
-        pass
+        """
+        对格式化后的数据进行预测，如果判断为异常则返回1，判断正常则返回0
+        :param data: 格式化后的数据，即时间已转换成星期，小时，分钟，没有label，
+        :return: 异常1， 正常0
+        """
+        return int(self.model.predict(xgb.DMatrix(data)) + 0.5)
 
-    def insert_database(self):
+    def insert_database_model(self):
+        """
+        插入数据到model表中，初始化的时候会插入数据，后续都是update
+        :return:插入成功，返回True,失败返回False
+        """
         if insert_xgboost_model(self.name, self.precision, self.recall,
-                             self.f1, self.trained_number, self.finished,
-                             self.changed, self.create_time, self.lasted_update):
+                                self.f1, self.trained_number, self.finished,
+                                self.changed, self.create_time, self.lasted_update):
             print("插入成功")
+            return True
+        return False
 
-    def save_model(self):
-        pass
+    def update_database_model(self):
+        """
+        重新训练数据后会更新，只更新数据
+        :return:
+        """
+        if update_xgboost_model(self.name, self.precision, self.recall,
+                                self.f1, self.trained_number, self.finished,
+                                self.changed, self.lasted_update):
+            return True
+            print("更新成功")
+        return False
 
-    def load_mode(self):
-        pass
+
