@@ -4,9 +4,7 @@
 # @Author  : zsj
 # @File    : xgboost_class.py
 # @Description:
-import pickle
 import time
-
 import numpy as np
 import xgboost as xgb
 
@@ -69,9 +67,9 @@ class Xgboost:
         # 验证集
         dtest = xgb.DMatrix(datas[rate_num1 + 1: -1, 0:-1].astype(float),
                             label = datas[rate_num1 + 1: -1, -1].astype(int))
-        # 训练模型并使用验证集验证
         # 显示训练过程
         watchlist = [(dtrain, 'train'), (dtest, 'test')]
+        # 训练模型并使用验证集验证
         bst = xgb.train(self.param, dtrain, self.num_round, watchlist)
         # 预测测试集数据
         preds = bst.predict(dtest)
@@ -102,9 +100,6 @@ class Xgboost:
         print("FN", FN)
         print("FP", FP)
         print("TN", TN)
-        print("length", len(labels))
-        print(p)
-        print(labels)
         # 得出精确率、召回率和F1
         self.precision = TP / float(TP + FP)
         self.recall = TP / float(TP + FN)
@@ -145,8 +140,8 @@ class Xgboost:
         if update_xgboost_model(self.name, self.precision, self.recall,
                                 self.f1, self.trained_number, self.finished,
                                 self.changed, self.lasted_update):
-            return True
             print("更新成功")
+            return True
         return False
 
 
