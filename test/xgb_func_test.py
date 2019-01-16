@@ -8,7 +8,6 @@ from db.mysql_operation import insert_train_datas, connectdb, query_table, creat
 from isolate_model.base_function import load_csv, translate_to_xgboost_datas, save_xgboost_class, load_xgboost_class
 from isolate_model.isolate_class import Isolate
 from xgboost_model.xgboost_class import Xgboost
-import xgboost as xgb
 
 cases = load_csv("../file/customs_cpu_test.csv")
 isolate1 = Isolate('2_7', cases)
