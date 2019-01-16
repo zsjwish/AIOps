@@ -9,7 +9,7 @@ import numpy as np
 import xgboost as xgb
 
 from db.mysql_operation import insert_xgboost_model, update_xgboost_model
-from isolate_model.base_function import load_data_from_mysql
+from isolate_model.base_function import load_data_for_xgboost_from_mysql
 
 
 class Xgboost:
@@ -50,7 +50,7 @@ class Xgboost:
 
     def init_model(self):
         # 从数据库获取数据，model_name就是表名
-        datas = load_data_from_mysql(self.name)
+        datas = load_data_for_xgboost_from_mysql(self.name)
         # 按行打乱顺序，然后从中选择训练集，测试集, 验证集
         np.random.shuffle(datas)
         # 训练集和测试集取9:1，用于取准备率和召回率

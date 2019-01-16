@@ -59,10 +59,15 @@ testX = numpy.reshape(testX, (testX.shape[0], testX.shape[1], 1))
 
 # 初始化模型
 model = Sequential()
-model.add(LSTM(4, input_shape=(look_back, 1)))
+# 添加LSTM模型
+model.add(LSTM(7, input_shape=(look_back, 1)))
+# 添加核心网络层
 model.add(Dense(1))
+# 配置训练模型，loss损失函数
 model.compile(loss='mean_squared_error', optimizer='adam')
-model.fit(trainX, trainY, epochs=100, batch_size=1, verbose=2)
+print(trainX.shape)
+# 训练模型 x:样本，y:标签，epochs训练轮数，verbose:输出信息(0=无，1=进度条，2=每个时期一行),batch_size:并行数，默认32
+model.fit(trainX, trainY, epochs=100, batch_size = 5, verbose = 2)
 
 trainPredict = model.predict(trainX)
 testPredict = model.predict(testX)
@@ -74,7 +79,7 @@ testY = scaler.inverse_transform([testY])
 
 trainScore = math.sqrt(mean_squared_error(trainY[0], trainPredict[:, 0]))
 print('Train Score: %.2f RMSE' % (trainScore))
-testScore = math.sqrt(mean_squared_error(testY[0], testPredict[:,0]))
+testScore = math.sqrt(mean_squared_error(testY[0], testPredict[:, 0]))
 print('Test Score: %.2f RMSE' % (testScore))
 
 trainPredictPlot = numpy.empty_like(dataset)

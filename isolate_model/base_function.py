@@ -7,7 +7,7 @@
 import pickle
 import re
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -167,7 +167,12 @@ def translate_to_xgboost_datas(np_array):
     return np_array
 
 
-def load_data_from_mysql(table_name):
+def load_data_for_xgboost_from_mysql(table_name):
+    """
+    从数据库为xgboost模型读取数据，并进行时间格式转换
+    :param table_name: 要读取的表名
+    :return:
+    """
     db = connectdb()
     np_array = np.array(query_datas(db, table_name = table_name))
     # 删除id列
@@ -190,6 +195,21 @@ def load_data_from_mysql(table_name):
     return np_array
 
 
+def load_data_for_lstm_from_mysql(table_name, end_time):
+    """
+    从数据库为lstm模型读取一天的数据
+    :param table_name:
+    :param end_time:
+    :return:
+    """
+    db = connectdb()
+    start_time = end_time - timedelta(days=1)
+    print(start_time)
+    np_array = np.array(query_datas(db, table_name = table_name, start_time = start_time, end_time = end_time))
+    print(np_array.shape)
+    return np_array[:, -2]
+
+
 def save_xgboost_class(model):
     """
     xgboost 模型持久化，存储在models目录下，使用model.name作为文件名
@@ -209,3 +229,8 @@ def load_xgboost_class(model_name):
     """
     file_name = "../models/%s" % model_name
     return pickle.load(open(file_name, "rb"))
+
+str = "2018-11-16 21:38:11"
+end_time = datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
+print(end_time)
+load_data_for_lstm_from_mysql("20bc4dbb-f7f8-4521-9187-7dc31cac76e",end_time)
