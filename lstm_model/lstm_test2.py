@@ -28,6 +28,8 @@ plt.show()
 # convert an array of values into a dataset matrix
 def create_dataset(dataset, look_back=3):
     dataX, dataY = [], []
+    print(type(dataset))
+    print(dataset.shape)
     for i in range(len(dataset)-look_back-1):
         a = dataset[i:(i+look_back), 0]
         dataX.append(a)
@@ -60,7 +62,7 @@ testX = numpy.reshape(testX, (testX.shape[0], testX.shape[1], 1))
 # 初始化模型
 model = Sequential()
 # 添加LSTM模型
-model.add(LSTM(7, input_shape=(look_back, 1)))
+model.add(LSTM(50, input_shape=(look_back, 1)))
 # 添加核心网络层
 model.add(Dense(1))
 # 配置训练模型，loss损失函数
