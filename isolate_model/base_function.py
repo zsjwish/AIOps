@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import matplotlib.pyplot as plt
 
-from db.mysql_operation import connectdb, query_datas
+from db.mysql_operation import connectdb, query_datas, closedb
 
 
 def load_csv(file_name):
@@ -191,6 +191,7 @@ def load_data_for_xgboost_from_mysql(table_name):
     np_array = np.insert(np_array, 0, values = minute, axis = 1)
     np_array = np.insert(np_array, 0, values = hour, axis = 1)
     np_array = np.insert(np_array, 0, values = week, axis = 1)
+    closedb()
     # 此时返回的属性分别是 week, hour, minute, kpi_1... kpi_n,label
     return np_array
 
@@ -198,15 +199,14 @@ def load_data_for_xgboost_from_mysql(table_name):
 def load_data_for_lstm_from_mysql(table_name, end_time):
     """
     从数据库为lstm模型读取一天的数据
-    :param table_name:
-    :param end_time:
+    :param table_name: 表名
+    :param end_time: 最后截止时间，即什么时刻开始预测
     :return:
     """
     db = connectdb()
     start_time = end_time - timedelta(days=1)
-    print(start_time)
     np_array = np.array(query_datas(db, table_name = table_name, start_time = start_time, end_time = end_time))
-    print(np_array.shape)
+    closedb()
     return np_array[:, -2]
 
 
