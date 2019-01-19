@@ -205,7 +205,7 @@ def load_data_for_lstm_from_mysql(table_name, end_time, day_of_data):
     :return:
     """
     db = connectdb()
-    start_time = end_time - timedelta(days=day_of_data)
+    start_time = end_time - timedelta(days = day_of_data)
     np_array = np.array(query_datas(db, table_name = table_name, start_time = start_time, end_time = end_time))
     closedb(db)
     return np_array[:, -2]
@@ -231,7 +231,10 @@ def load_xgboost_class(model_name):
     file_name = "../models/%s" % model_name
     return pickle.load(open(file_name, "rb"))
 
+
 str = "2018-11-16 21:38:11"
 end_time = datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
 print(end_time)
-load_data_for_lstm_from_mysql("20bc4dbb-f7f8-4521-9187-7dc31cac76e",end_time)
+res = load_data_for_lstm_from_mysql("20bc4dbb-f7f8-4521-9187-7dc31cac76e", end_time, 1)
+print(type(res))
+print(res)
