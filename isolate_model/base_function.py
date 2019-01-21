@@ -217,7 +217,7 @@ def save_xgboost_class(model):
     :param model:
     :return:
     """
-    file_name = "../models/%s" % model.name
+    file_name = "../models/xgboost/%s" % model.name
     with open(file_name, 'wb') as file_obj:
         pickle.dump(model, file_obj)
 
@@ -228,7 +228,28 @@ def load_xgboost_class(model_name):
     :param model_name:模型名
     :return: 返回模型
     """
-    file_name = "../models/%s" % model_name
+    file_name = "../models/xgboost/%s" % model_name
+    return pickle.load(open(file_name, "rb"))
+
+
+def save_lstm_class(model):
+    """
+    lstm 模型持久化，存储在models目录下，使用model.name作为文件名
+    :param model:
+    :return:
+    """
+    file_name = "../models/lstm/%s" % model.name
+    with open(file_name, 'wb') as file_obj:
+        pickle.dump(model, file_obj)
+
+
+def load_lstm_class(model_name):
+    """
+    根据模型名称加载模型，返回model
+    :param model_name:模型名
+    :return: 返回模型
+    """
+    file_name = "../models/lstm/%s" % model_name
     return pickle.load(open(file_name, "rb"))
 
 

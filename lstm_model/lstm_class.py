@@ -15,7 +15,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 
 from db.mysql_operation import insert_lstm_model, update_lstm_model
-from isolate_model.base_function import load_data_for_lstm_from_mysql
+from isolate_model.base_function import load_data_for_lstm_from_mysql, save_lstm_class, load_lstm_class
 
 
 class LSTMModel:
@@ -26,7 +26,7 @@ class LSTMModel:
         # 想要预测之后多少值
         self.look_forward = 30
         # 最后预测时间
-        self.lasted_predict = "0"
+        self.lasted_predict = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         # 最后预测的值,str拼接起来
         self.predict_str_value = "0"
         # 训练集测试集比例
@@ -50,6 +50,7 @@ class LSTMModel:
         model.add(Activation('linear'))
         model.compile(loss = 'mse', optimizer = 'rmsprop')
         self.model = model
+        self.insert_database_model()
         self.train()
 
     def train(self, data=None):
@@ -88,8 +89,7 @@ class LSTMModel:
         testScore = math.sqrt(mean_squared_error(testY[0], testPredict[:, 0]))
         self.rmse = min(trainScore, testScore)
         self.lasted_predict = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        print("created time", self.create_time)
-        # self.insert_database_model()
+        self.update_database_model()
 
     def create_dataset(self, dataset):
         """
@@ -212,74 +212,6 @@ lstm1.predict_data = data
 lstm1.predict_values()
 time.sleep(10)
 lstm1.update_database_model()
-# list = list(range(51))
-#
-# lstm1 = LSTMModel("982c78b5-435a-40b3-9a31-9fb5fbf8b16")
-#
-# str = "2018-11-16 21:38:11"
-# end_time = datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
-#
-# data = load_data_for_lstm_from_mysql("982c78b5-435a-40b3-9a31-9fb5fbf8b16", end_time, 0.5)
-# data = np.reshape(data, (len(data), 1))
-# data = data[-50:, :].tolist()
-# lstm1.predict_data = data
-# while len(lstm1.predict_data) < 80:
-#     tmp = lstm1.predict_next_value(data = lstm1.predict_data)
-#     lstm1.predict_data.append(tmp)
-# print(lstm1.predict_data)
-# print(len(lstm1.predict_data))
-# lstm1.predict_data = sum(lstm1.predict_data, [])
-# # print(sum(lstm1.predict_data, []))
-# print("data", lstm1.predict_data)
-# lstm1.predict_data = [round(i, 3) for i in lstm1.predict_data]
-# print(lstm1.predict_data)
-# print(len(lstm1.predict_data))
-# np.random.seed(7)
-# # look_back = 50
-# # # data = np.array(range(500))
-# # str = "2018-11-16 21:38:11"
-# # end_time = datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
-# # # 获取五十分钟内的数据
-# # data = load_data_for_lstm_from_mysql("982c78b5-435a-40b3-9a31-9fb5fbf8b16", end_time, 0.5)
-# # data = data.reshape(len(data), 1)
-# # scaler = MinMaxScaler(feature_range = (0, 1))
-# # data = scaler.fit_transform(data)
-# # print(type(data))
-# # print(data)
-# # train_size = int(len(data) * 0.70)
-# # test_size = len(data) - train_size
-# # train, test = data[0:train_size, :], data[train_size:len(data), :]
-# #
-# # trainX, trainY = create_dataset(train)
-# # testX, testY = create_dataset(test)
-# # # 转换成三维输入，sample，time step，feature
-# # trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
-# #
-# # testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
-# # print("testX shape", testX.shape)
-# # model = Sequential()
-# # model.add(LSTM(50, input_shape = (1, look_back), return_sequences = True))
-# # model.add(LSTM(100, return_sequences = False))
-# # model.add(Dense(units = 1))
-# # model.add(Activation('linear'))
-# # model.compile(loss = 'mse', optimizer = 'rmsprop')
-# # model.fit(trainX, trainY, epochs = 100, verbose = 2)
-# #
-# # # print(len(trainX))
-# # # testPredict = model.predict(testX)
-# # # print("testX shape", testX.shape)
-# # # print(len(testX))
-# # # testPredict = scaler.inverse_transform(testPredict)
-# # # print("testPredict.shape", testPredict.shape)
-# # # print(testPredict)
-# # # print(len(testPredict))
-# # # 获取五十分钟内的数据
-# # testdata = load_data_for_lstm_from_mysql("982c78b5-435a-40b3-9a31-9fb5fbf8b16", end_time, 0.5)
-# # testdata = testdata.reshape(len(testdata), 1)
-# # scaler = MinMaxScaler(feature_range = (0, 1))
-# # testdata = scaler.fit_transform(testdata)
-# # trainX, trainY = create_dataset(testdata)
-# # trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
-# # testPredict = model.predict(trainX)
-# # testPredict = scaler.inverse_transform(testPredict)
-# # print(testPredict)
+save_lstm_class(lstm1)
+lstm2 = load_lstm_class(lstm1.name)
+print(lstm2.predict_str_value)

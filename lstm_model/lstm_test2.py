@@ -99,3 +99,76 @@ plt.plot(scaler.inverse_transform(dataset))
 plt.plot(trainPredictPlot)
 plt.plot(testPredictPlot)
 plt.show()
+
+
+# list = list(range(51))
+#
+# lstm1 = LSTMModel("982c78b5-435a-40b3-9a31-9fb5fbf8b16")
+#
+# str = "2018-11-16 21:38:11"
+# end_time = datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
+#
+# data = load_data_for_lstm_from_mysql("982c78b5-435a-40b3-9a31-9fb5fbf8b16", end_time, 0.5)
+# data = np.reshape(data, (len(data), 1))
+# data = data[-50:, :].tolist()
+# lstm1.predict_data = data
+# while len(lstm1.predict_data) < 80:
+#     tmp = lstm1.predict_next_value(data = lstm1.predict_data)
+#     lstm1.predict_data.append(tmp)
+# print(lstm1.predict_data)
+# print(len(lstm1.predict_data))
+# lstm1.predict_data = sum(lstm1.predict_data, [])
+# # print(sum(lstm1.predict_data, []))
+# print("data", lstm1.predict_data)
+# lstm1.predict_data = [round(i, 3) for i in lstm1.predict_data]
+# print(lstm1.predict_data)
+# print(len(lstm1.predict_data))
+# np.random.seed(7)
+# # look_back = 50
+# # # data = np.array(range(500))
+# # str = "2018-11-16 21:38:11"
+# # end_time = datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
+# # # 获取五十分钟内的数据
+# # data = load_data_for_lstm_from_mysql("982c78b5-435a-40b3-9a31-9fb5fbf8b16", end_time, 0.5)
+# # data = data.reshape(len(data), 1)
+# # scaler = MinMaxScaler(feature_range = (0, 1))
+# # data = scaler.fit_transform(data)
+# # print(type(data))
+# # print(data)
+# # train_size = int(len(data) * 0.70)
+# # test_size = len(data) - train_size
+# # train, test = data[0:train_size, :], data[train_size:len(data), :]
+# #
+# # trainX, trainY = create_dataset(train)
+# # testX, testY = create_dataset(test)
+# # # 转换成三维输入，sample，time step，feature
+# # trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+# #
+# # testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
+# # print("testX shape", testX.shape)
+# # model = Sequential()
+# # model.add(LSTM(50, input_shape = (1, look_back), return_sequences = True))
+# # model.add(LSTM(100, return_sequences = False))
+# # model.add(Dense(units = 1))
+# # model.add(Activation('linear'))
+# # model.compile(loss = 'mse', optimizer = 'rmsprop')
+# # model.fit(trainX, trainY, epochs = 100, verbose = 2)
+# #
+# # # print(len(trainX))
+# # # testPredict = model.predict(testX)
+# # # print("testX shape", testX.shape)
+# # # print(len(testX))
+# # # testPredict = scaler.inverse_transform(testPredict)
+# # # print("testPredict.shape", testPredict.shape)
+# # # print(testPredict)
+# # # print(len(testPredict))
+# # # 获取五十分钟内的数据
+# # testdata = load_data_for_lstm_from_mysql("982c78b5-435a-40b3-9a31-9fb5fbf8b16", end_time, 0.5)
+# # testdata = testdata.reshape(len(testdata), 1)
+# # scaler = MinMaxScaler(feature_range = (0, 1))
+# # testdata = scaler.fit_transform(testdata)
+# # trainX, trainY = create_dataset(testdata)
+# # trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+# # testPredict = model.predict(trainX)
+# # testPredict = scaler.inverse_transform(testPredict)
+# # print(testPredict)
