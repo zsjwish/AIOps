@@ -11,9 +11,10 @@ from datetime import datetime
 import numpy as np
 from keras import Sequential
 from keras.layers import LSTM, Dense, Activation
+from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 
-from db.mysql_operation import insert_xgboost_model, update_xgboost_model
+from db.mysql_operation import insert_lstm_model, update_lstm_model
 from isolate_model.base_function import load_data_for_lstm_from_mysql
 
 
@@ -25,9 +26,9 @@ class LSTMModel:
         # 想要预测之后多少值
         self.look_forward = 30
         # 最后预测时间
-        self.lasted_predict = None
+        self.lasted_predict = "0"
         # 最后预测的值,str拼接起来
-        self.predict_str_value = None
+        self.predict_str_value = "0"
         # 训练集测试集比例
         self.rate = [7, 3]
         # 模型初始化时间
@@ -37,7 +38,7 @@ class LSTMModel:
         # 均方根误差，用来判断模型预测效果
         self.rmse = 0
         # 每个模型预测时候不应该每次取数据库，这里设置一个用以存储以往的数据，预测时候直接使用，省去读数据库
-        self.history_data = []
+        # self.history_data = []
         # 每次向前预测的值，每次预测look_forward个值
         self.predict_data = []
         # 初始化模型，train_x的维度为(n_samples, time_steps, input_dim)
@@ -83,15 +84,16 @@ class LSTMModel:
         trainY = scaler.inverse_transform([trainY])
         testPredict = scaler.inverse_transform(testPredict)
         testY = scaler.inverse_transform([testY])
-        # trainScore = math.sqrt(mean_squared_error(trainY[0], trainPredict[:, 0]))
-        # print('Train Score: %.2f RMSE' % (trainScore))
-        # testScore = math.sqrt(mean_squared_error(testY[0], testPredict[:, 0]))
-        # print('Test Score: %.2f RMSE' % (testScore))
-        # self.rmse = min(trainScore, testScore)
+        trainScore = math.sqrt(mean_squared_error(trainY[0], trainPredict[:, 0]))
+        testScore = math.sqrt(mean_squared_error(testY[0], testPredict[:, 0]))
+        self.rmse = min(trainScore, testScore)
+        self.lasted_predict = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        print("created time", self.create_time)
+        # self.insert_database_model()
 
     def create_dataset(self, dataset):
         """
-        对从数据库获取的数据进行处理，变成特征x和y的形式
+        训练时对从数据库获取的数据进行处理，变成特征x和y的形式
         :param dataset:
         :return:
         """
@@ -101,13 +103,11 @@ class LSTMModel:
             a = dataset[i:(i + look_back), 0]
             dataX.append(a)
             dataY.append(dataset[i + look_back, 0])
-        print("dataX", dataX)
-        print("dataY", dataY)
         return np.array(dataX), np.array(dataY)
 
     def create_predict_dataset(self, dataset):
         """
-        对从数据库获取的数据进行处理，变成特征x和y的形式,dataset是list
+        预测时对从数据库获取的数据进行处理，变成特征x和y的形式,dataset是list
         :param dataset:
         :return:
         """
@@ -116,10 +116,13 @@ class LSTMModel:
         for i in range(len(dataset) - look_back):
             a = dataset[i:(i + look_back)]
             dataX.append(a)
-        print("dataX", dataX)
         return np.array(dataX)
 
     def predict_values(self):
+        """
+        预测，循环调用predict_next_value来预测之后的值，使用预测的值再预测
+        :return:
+        """
         while len(self.predict_data) < self.look_back + self.look_forward:
             tmp = self.predict_next_value(data = self.predict_data)
             self.predict_data.append(tmp)
@@ -127,9 +130,12 @@ class LSTMModel:
         self.predict_data = sum(self.predict_data, [])
         # 精确到小数点后4位
         self.predict_data = [round(i, 3) for i in self.predict_data]
-        str_value = self.predict_data[(-1*self.look_forward):]
-        print(type(str_value))
+        # 只取后三十个预测的值存储
+        str_value = self.predict_data[(-1 * self.look_forward):]
+        # 转换成str,并使用,分割
         self.predict_str_value = ','.join(str(e) for e in str_value)
+        # 更新数据库表
+        self.update_database_model()
 
     def predict_next_value(self, data):
         """
@@ -142,18 +148,18 @@ class LSTMModel:
         data = data[-50:]
         # 改变ndarray的shape
         data = np.array(data).reshape(len(data), 1)
-        print("data", data)
+        # print("data", data)
         # 归一化处理
         scaler = MinMaxScaler(feature_range = (0, 1))
         data = scaler.fit_transform(data)
-        print(len(data))
+        # print(len(data))
         dataX = np.reshape(data, (data.shape[1], 1, data.shape[0]))
-        print(dataX.shape)
+        # print(dataX.shape)
         dataPredict = self.model.predict(dataX)
-        print("dataPredic shape", dataPredict.shape)
-        print(dataPredict)
+        # print("dataPredic shape", dataPredict.shape)
+        # print(dataPredict)
         Predict = scaler.inverse_transform(dataPredict)
-        print(Predict.tolist()[0])
+        # print(Predict.tolist()[0])
         return Predict.tolist()[0]
 
     def insert_database_model(self):
@@ -161,9 +167,8 @@ class LSTMModel:
         插入数据到model表中，初始化的时候会插入数据，后续都是update
         :return:插入成功，返回True,失败返回False
         """
-        if insert_xgboost_model(self.name, self.precision, self.recall,
-                                self.f1, self.trained_number, self.finished,
-                                self.changed, self.create_time, self.lasted_update):
+        if insert_lstm_model(self.name, self.rmse, self.lasted_predict,
+                             self.predict_str_value, self.create_time, self.lasted_update):
             print("插入成功")
             return True
         return False
@@ -173,9 +178,8 @@ class LSTMModel:
         重新训练数据后会更新，只更新数据
         :return:
         """
-        if update_xgboost_model(self.name, self.precision, self.recall,
-                                self.f1, self.trained_number, self.finished,
-                                self.changed, self.lasted_update):
+        if update_lstm_model(self.name, self.rmse, self.lasted_predict,
+                             self.predict_str_value, self.lasted_update):
             print("更新成功")
             return True
         return False
@@ -193,10 +197,9 @@ def create_dataset(dataset):
         a = dataset[i:(i + look_back), 0]
         dataX.append(a)
         dataY.append(dataset[i + look_back, 0])
-    print("dataX", dataX)
-    print("dataY", dataY)
+    # print("dataX", dataX)
+    # print("dataY", dataY)
     return np.array(dataX), np.array(dataY)
-
 
 
 times = "2018-11-16 21:38:11"
@@ -207,7 +210,8 @@ data = np.reshape(data, (len(data), 1))
 data = data[-50:, :].tolist()
 lstm1.predict_data = data
 lstm1.predict_values()
-print(lstm1.predict_str_value)
+time.sleep(10)
+lstm1.update_database_model()
 # list = list(range(51))
 #
 # lstm1 = LSTMModel("982c78b5-435a-40b3-9a31-9fb5fbf8b16")

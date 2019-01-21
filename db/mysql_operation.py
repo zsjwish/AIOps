@@ -238,7 +238,8 @@ def delete_datas(db, table_name, start_time=0, end_time=0):
         return False
 
 
-def insert_xgboost_model(model_name, precision=0., recall=0., f1=0., trained=0, finished=0, changed=0, created_time=0, lasted_update=0):
+def insert_xgboost_model(model_name, precision=0., recall=0., f1=0., trained=0, finished=0, changed=0, created_time=0,
+                         lasted_update=0):
     """
     插入xgboost训练数据到数据库表中
     :param db:
@@ -257,7 +258,8 @@ def insert_xgboost_model(model_name, precision=0., recall=0., f1=0., trained=0, 
     cursor = db.cursor()
     # sql 插入语句,确定表名，字段名（有自增字段）,和插入内容
     sql = "INSERT INTO `model`(`model_name`, `precision`, `recall`, `f1`, `trained`, `finished`, `changed`, `created_time`, `lasted_update`) " \
-          "VALUES('%s',%f,%f,%f,%d,%d,%d,'%s','%s')" % (model_name, precision, recall, f1, trained, finished, changed, created_time, lasted_update)
+          "VALUES('%s',%f,%f,%f,%d,%d,%d,'%s','%s')" % (
+              model_name, precision, recall, f1, trained, finished, changed, created_time, lasted_update)
     print(sql)
     try:
         # 执行sql语句
@@ -317,7 +319,78 @@ def update_xgboost_model(model_name, precision=0., recall=0., f1=0., trained=0, 
         return True
     except:
         # 如果失败则回滚
+        print('更新xgboost数据失败')
+        db.rollback()
+        return False
+
+
+def insert_lstm_model(model_name, rmse=0., lasted_predict=0, predict_value=0., created_time=0, lasted_update=0):
+    """
+    插入lstm训练数据到数据库表中
+    :param model_name: 模型名称
+    :param rmse: 模型的均方根误差，用来衡量模型预测的效果
+    :param lasted_predict: 最后预测时间
+    :param predict_value: 预测的值，字符串的形式存储
+    :param created_time: 创建模型时间
+    :param lasted_update: 最后更新模型时间
+    :return: true插入成功，false插入失败
+    """
+    db = connectdb()
+    cursor = db.cursor()
+    # sql 插入语句,确定表名，字段名（有自增字段）,和插入内容
+    sql = "INSERT INTO `lstm_model`(`model_name`, `rmse`, `lasted_predict`, `predict_value`, `created_time`, `lasted_update`) " \
+          "VALUES('%s',%f,'%s','%s','%s','%s')" % \
+          (model_name, rmse, lasted_predict, predict_value, created_time, lasted_update)
+    print(sql)
+    try:
+        # 执行sql语句
+        cursor.execute(sql)
+        # 提交到数据库执行
+        db.commit()
+        return True
+    except:
+        # 如果失败则回滚
         print('插入数据失败')
+        db.rollback()
+        return False
+
+
+def update_lstm_model(model_name, rmse=0., lasted_predict=0, predict_value=0, lasted_update=0):
+    """
+    更新lstm模型后更新数据库表信息
+    :param model_name:
+    :param rmse:
+    :param lasted_predict:
+    :param predict_value:
+    :param lasted_update:
+    :return:
+    """
+    # update 条件
+    condition = ""
+    if rmse != 0:
+        condition += "`rmse` = %f," % rmse
+    if lasted_predict != 0:
+        condition += "`lasted_predict` = '%s'," % lasted_predict
+    if predict_value != 0:
+        condition += "`predict_value` = '%s'," % predict_value
+    if lasted_update != 0:
+        condition += "`lasted_update` = '%s'" % lasted_update
+    print(condition)
+
+    db = connectdb()
+    cursor = db.cursor()
+    # sql 插入语句,确定表名，字段名（有自增字段）,和插入内容
+    sql = "UPDATE `lstm_model` set %s where `model_name` = '%s'" % (condition, model_name)
+    print(sql)
+    try:
+        # 执行sql语句
+        cursor.execute(sql)
+        # 提交到数据库执行
+        db.commit()
+        return True
+    except:
+        # 如果失败则回滚
+        print('更新lstm数据失败')
         db.rollback()
         return False
 
