@@ -92,6 +92,7 @@ class Isolate:
         """
         # 获取异常检测结果，结果放在label_list中
         multy_res = self.clf.predict(datas[start_row:end_row].astype(np.float32))
+        print(multy_res)
         for i in range(0, len(multy_res)):
             if multy_res[i] == -1:
                 self.label_list[start_row + i] = 1

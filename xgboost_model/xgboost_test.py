@@ -9,7 +9,6 @@ import numpy as np
 import xgboost as xgb
 
 from isolate_model.base_function import load_csv, translate_to_xgboost_datas
-from isolate_model.isolate_class import Isolate
 
 cases = load_csv("../file/predict.csv")
 # isolate1 = Isolate('2_7', cases)

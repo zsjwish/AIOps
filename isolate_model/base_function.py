@@ -7,7 +7,7 @@
 import pickle
 import re
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -22,6 +22,7 @@ def load_csv(file_name):
     :return:
     """
     array = np.loadtxt(file_name, dtype = str, delimiter = ",", encoding = 'utf-8')
+    print(type(array))
     return array
 
 
@@ -196,17 +197,16 @@ def load_data_for_xgboost_from_mysql(table_name):
     return np_array
 
 
-def load_data_for_lstm_from_mysql(table_name, end_time, day_of_data):
+def load_data_for_lstm_from_mysql(table_name, number_data):
     """
     从数据库为lstm模型读取一天的数据
-    :param day_of_data: 取前多少天数据作为训练或者预测
+    :param number_data: 取最后多少个数据来训练或者预测
     :param table_name: 表名
     :param end_time: 最后截止时间，即什么时刻开始预测
     :return:
     """
     db = connectdb()
-    start_time = end_time - timedelta(days = day_of_data)
-    np_array = np.array(query_datas(db, table_name = table_name, start_time = start_time, end_time = end_time))
+    np_array = np.array(query_datas(db, table_name = table_name, number = number_data))
     closedb(db)
     return np_array[:, -2]
 
@@ -252,10 +252,9 @@ def load_lstm_class(model_name):
     file_name = "../models/lstm/%s" % model_name
     return pickle.load(open(file_name, "rb"))
 
-
-str = "2018-11-16 21:38:11"
-end_time = datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
-print(end_time)
-res = load_data_for_lstm_from_mysql("20bc4dbb-f7f8-4521-9187-7dc31cac76e", end_time, 1)
-print(type(res))
-print(res)
+# str = "2018-11-16 21:38:11"
+# end_time = datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
+# print(end_time)
+# res = load_data_for_lstm_from_mysql("20bc4dbb-f7f8-4521-9187-7dc31cac76e", end_time, 1)
+# print(type(res))
+# print(res)
